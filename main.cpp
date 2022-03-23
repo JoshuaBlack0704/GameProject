@@ -2,6 +2,6 @@
 #include <API.hpp>
 
 int main(int, char**) {
-    Logger logger;
-    logger.Log();
+    VulkanInitalizer vkInit;
+    vkInit.Init();
 }

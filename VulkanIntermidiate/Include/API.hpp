@@ -1,7 +1,11 @@
 #pragma once
 #define VULKAN_INTERMIDIATE_LIBRARY_NAMESPACE vil
 
-class Logger{
+struct MainData;
+
+class VulkanInitalizer{
     public:
-    void Log();
+    void Init();
+    private:
+    MainData* data;
 };
