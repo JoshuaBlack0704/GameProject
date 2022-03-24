@@ -8,9 +8,7 @@ find_package(Vulkan REQUIRED)
 
 add_subdirectory(external)
 add_subdirectory(VulkanIntermidiate)
-add_executable(Game main.cpp)
-
-target_link_libraries(Game PRIVATE vil)
+add_subdirectory(Game)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
