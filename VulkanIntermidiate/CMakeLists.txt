@@ -1,5 +1,5 @@
-file(GLOB src "Source/*.cpp")
-file(GLOB incl "Include/*.hpp")
+file(GLOB src "Source/*.cpp" "ImGui/*.cpp")
+file(GLOB incl "Include/*.hpp" "ImGui/*.hpp")
 
 add_library(vil ${src} ${incl})
 

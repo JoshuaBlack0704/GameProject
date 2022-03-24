@@ -6,10 +6,15 @@
 
 struct MainData{
 
-    GLFWwindow* window;
+    GLFWwindow* window = nullptr;
     vkb::Instance instance;
     vk::SurfaceKHR surface;
     vkb::PhysicalDevice pDevice;
     vkb::Device device;
-    VmaAllocator allocator;
+    VmaAllocator allocator = nullptr;
+};
+
+struct ImGuiInfo
+{
+
 };

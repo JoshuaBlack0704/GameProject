@@ -5,7 +5,7 @@ struct MainData;
 
 class VulkanInitalizer{
     public:
-    void Init();
+    void Init(bool withImGui = true);
     private:
     MainData* data;
 };
