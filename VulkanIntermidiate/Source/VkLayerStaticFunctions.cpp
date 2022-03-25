@@ -1,13 +1,6 @@
 #define VMA_IMPLEMENTATION
-#include "../Include/Storage.hpp"
-#include "../Include/API.hpp"
+#include "../Include/VkLayer.hpp"
 #include <spdlog/spdlog.h>
-#define GLFW_INCLUDE_NONE
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
-#include "../ImGui/imgui.h"
-#include "../ImGui/imgui_impl_glfw.h"
-#include "../ImGui/imgui_impl_vulkan.h"
 
 void VulkanInitalizer::Init(bool useImGui)
 {

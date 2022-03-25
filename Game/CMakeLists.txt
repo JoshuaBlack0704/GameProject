@@ -1,6 +1,6 @@
-file(GLOB src "Source/*.cpp")
-file(GLOB incl "Include/*.hpp")
+file(GLOB_RECURSE src "*.c" "*.cpp")
+file(GLOB_RECURSE incl "*.hpp" "*.h")
 
 add_executable(game ${src} ${incl})
 
-target_link_libraries(game PRIVATE spdlog::spdlog glm vil)
+target_link_libraries(game PRIVATE spdlog::spdlog glm vkLayer)

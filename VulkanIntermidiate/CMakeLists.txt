@@ -1,8 +1,8 @@
-file(GLOB src "Source/*.cpp" "ImGui/*.cpp")
-file(GLOB incl "Include/*.hpp" "ImGui/*.hpp")
+file(GLOB_RECURSE src "*.cpp" "*.c")
+file(GLOB_RECURSE incl "*.hpp" "*.h")
 
-add_library(vil ${src} ${incl})
+add_library(vkLayer ${src} ${incl})
 
-target_include_directories(vil PRIVATE ${VULKAN_INCLUDE_DIR})
-target_link_libraries(vil PRIVATE glfw spdlog::spdlog VulkanMemoryAllocator glm)
-target_include_directories(vil INTERFACE "Include/")
+target_include_directories(vkLayer PRIVATE ${VULKAN_INCLUDE_DIR})
+target_link_libraries(vkLayer PRIVATE glfw spdlog::spdlog VulkanMemoryAllocator glm)
+target_include_directories(vkLayer INTERFACE "Include/")
