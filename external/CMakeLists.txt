@@ -1,6 +1,2 @@
 add_subdirectory(glm)
 add_subdirectory(VulkanMemoryAllocator)
-add_subdirectory(spdlog)
-add_subdirectory(glfw)
-set(GLFW_BUILD_DOCS OFF)
-set(GLFW_INSTALL OFF)

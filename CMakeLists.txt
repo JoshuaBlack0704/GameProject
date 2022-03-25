@@ -5,9 +5,11 @@ include(CTest)
 enable_testing()
 
 find_package(Vulkan REQUIRED)
+find_package(glfw3 REQUIRED)
+find_package(spdlog REQUIRED)
 
 add_subdirectory(external)
-add_subdirectory(VulkanIntermidiate)
+add_subdirectory(VulkanLayer)
 add_subdirectory(Game)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
