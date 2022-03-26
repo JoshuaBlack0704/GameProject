@@ -11,8 +11,8 @@
 namespace VK_LAYER_NAMESPACE
 {
     //Static variables where only one should be in existence at a time
-    extern GLFWwindow* window = nullptr;
-    extern vkb::Instance instance = vkb::Instance();
+    extern GLFWwindow* window;
+    extern vkb::Instance instance;
     extern vkb::PhysicalDevice pDevice;
     extern vkb::Device lDevice;
     extern vkb::Swapchain swapchain;

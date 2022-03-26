@@ -2,8 +2,26 @@
 #include "../Include/VkLayer.hpp"
 #include <spdlog/spdlog.h>
 
+
+GLFWwindow* vkl::window = nullptr;
+vkb::Instance vkl::instance = vkb::Instance();
+vkb::PhysicalDevice vkl::pDevice = vkb::PhysicalDevice();
+vkb::Device vkl::lDevice = vkb::Device();
+vkb::Swapchain vkl::swapchain = vkb::Swapchain();
+VkSurfaceKHR vkl::surface = VkSurfaceKHR();
+std::vector<std::function<void(GLFWwindow* window, int width, int height)>> vkl::resizeCallbacks = std::vector<std::function<void(GLFWwindow* window, int width, int height)>>();
+
+//Static settings
+int vkl::windowWidth = 100;
+int vkl::windowHeight = 100;
+bool vkl::useImGui = false;
+
+
 namespace VK_LAYER_NAMESPACE
 {
+
+
+
 
     void InitVkLayer()
     {

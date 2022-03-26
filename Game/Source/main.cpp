@@ -5,6 +5,9 @@
 #include <spdlog/spdlog.h>
 
 int main(){
+
+
+
     auto h = [](GLFWwindow*, int, int){spdlog::info("Resizing");};
     vkl::AddResizeCallBack(h);
     vkl::InitVkLayer();
