@@ -1,0 +1,51 @@
+# This is an example PKGBUILD file. Use this as a start to creating your own,
+# and remove these comments. For more information, see 'man PKGBUILD'.
+# NOTE: Please fill out the license field for your package! If it is unknown,
+# then please put 'unknown'.
+
+# Flecs Author: Sander Mertens
+# Maintainer: Joshua Black <knightrider0704@gmail.com>
+pkgname=flecs-git
+pkgver=v2.2.0.r1456.g46d620f3
+pkgrel=1
+epoch=
+pkgdesc="Flecs is a fast and lightweight Entity Component System that lets you build games and simulations with millions of entities."
+arch=(x86_64)
+url="https://github.com/SanderMertens/flecs.git"
+license=('MIT')
+groups=()
+depends=()
+makedepends=(git)
+checkdepends=()
+optdepends=()
+provides=()
+conflicts=()
+replaces=()
+backup=()
+options=()
+install=
+changelog=
+source=("git+$url")
+noextract=()
+md5sums=('SKIP')
+validpgpkeys=()
+
+pkgver() {
+	cd "flecs"
+    git describe --long | sed -r 's/([^-]*-g)/r\1/;s/-/./g'
+
+}
+
+build() {
+    cd $srcdir/flecs
+	cmake \
+	-DCMAKE_BUILD_TYPE=Release \
+	-S . \
+	-B .
+	make -j 12
+}
+
+package() {
+	cd flecs
+	make DESTDIR="$pkgdir/" install
+}
