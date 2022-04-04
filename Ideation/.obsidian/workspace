@@ -1,0 +1,95 @@
+{
+  "main": {
+    "id": "39be2fc33cb23938",
+    "type": "split",
+    "children": [
+      {
+        "id": "c622bf6ed0958d17",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "What Is Needed.md",
+            "mode": "source",
+            "source": true
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "04a39347905f7195",
+    "type": "split",
+    "children": [
+      {
+        "id": "2832448f02d977df",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a03a9dfac43affdd",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "2a72f5f5d940f76a",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "4cc183675bc9c173",
+    "type": "split",
+    "children": [
+      {
+        "id": "987458f855fbb66c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "865d372760f988f2",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "What Is Needed.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "c622bf6ed0958d17",
+  "lastOpenFiles": [
+    "What Is Needed.md",
+    "Main Parts.md"
+  ]
+}
