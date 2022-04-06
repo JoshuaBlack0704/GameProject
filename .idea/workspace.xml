@@ -48,52 +48,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d525c5d0-fcab-4353-87fc-933210b4e86a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/EnsureVulkan.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Game/VkSystem/VkSystem.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Game/VkSystem/VkSystem.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ideation/.obsidian/app.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ideation/.obsidian/appearance.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ideation/.obsidian/core-plugins.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ideation/.obsidian/hotkeys.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ideation/.obsidian/workspace" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ideation/What Is Needed.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/external/flecs/flecs.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/external/flecs/flecs.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/external/glfw" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/external/imgui" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/external/spdlog" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitmodules" beforeDir="false" afterPath="$PROJECT_DIR$/.gitmodules" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Game/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksCmdClasses.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksCommandClasses.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksGLFWCallbackHandler.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksGLFWCallbackHandler.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksImage.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksImage.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksPipeline.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksPipeline.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksVkData.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksVkData.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/Source/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Game/Source/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imconfig (copy).h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imconfig.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imgui (copy).h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imgui.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imgui.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imgui_demo.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imgui_draw.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imgui_impl_glfw.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imgui_impl_glfw.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imgui_impl_vulkan.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imgui_impl_vulkan.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imgui_internal.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imgui_tables.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imgui_widgets.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imstb_rectpack.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imstb_textedit (copy).h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imstb_textedit.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imstb_truetype (copy).h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/ImGui/imstb_truetype.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/Include/VkLayer.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/Source/VkLayerStaticFunctions.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/VkBootstrap/VkBootstrap.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Game/VkBootstrap/VkBootstrap.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/VkBootstrap/VkBootstrap.h" beforeDir="false" afterPath="$PROJECT_DIR$/Game/VkBootstrap/VkBootstrap.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VulkanLayer/VkBootstrap/VkBootstrapDispatch.h" beforeDir="false" afterPath="$PROJECT_DIR$/Game/VkBootstrap/VkBootstrapDispatch.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/external/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flecs-git/PKGBUILD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/VkSystem/VkSystem.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/VkSystem/VkSystem.h" beforeDir="false" afterPath="$PROJECT_DIR$/Game/VkSystem/VkSystem.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,7 +87,7 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Game/VkSystem/VkSystem.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Game/Source/main.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Game/VkSystem/VkSystem.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Game/VkSystem/vksVkData.cpp" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -158,6 +126,11 @@
     </key>
   </component>
   <component name="RunManager" selected="CMake Application.game">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Continuous" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Game" TARGET_NAME="Continuous" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -303,11 +276,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="flecs" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Game" TARGET_NAME="flecs" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -402,6 +370,8 @@
       <workItem from="1648924276988" duration="602000" />
       <workItem from="1649024644848" duration="4666000" />
       <workItem from="1649030626015" duration="7344000" />
+      <workItem from="1649086651830" duration="1702000" />
+      <workItem from="1649255450920" duration="17799000" />
     </task>
     <servers />
   </component>
@@ -426,9 +396,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/Game/VkSystem/VkSystem.cpp</url>
-          <line>8</line>
-          <option name="timeStamp" value="1" />
+          <url>file://$PROJECT_DIR$/Game/Source/main.cpp</url>
+          <line>34</line>
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

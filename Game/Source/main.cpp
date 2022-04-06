@@ -1,6 +1,8 @@
 //
 // Created by josh on 3/23/22.
 //
+#define USESPDLOG
+
 #include <spdlog/spdlog.h>
 #include <VkSystem.h>
 #include <flecs.h>
@@ -8,57 +10,28 @@
 
 int main(){
 
-    flecs::world world;
-
-    flecs::entity vkSystem = world.entity("vkSystem");
-    vkSystem.add<vks::VkSystemData>();
-
-    vkSystem.set<vks::ResizeCallback>({[&world](GLFWwindow* window, int width, int height, flecs::entity e){
-        auto data = e.get<vks::VkSystemData>();
-        auto oldChain = data->swapchain;
-        auto swapRet = vkb::SwapchainBuilder(data->lDevice)
-                .set_old_swapchain(data->swapchain)
-                .build();
-        if (!swapRet){
-            spdlog::error("During Resize, could not recreate swapchain");
-            abort();
-        }
-        vkb::destroy_swapchain(data->swapchain);
-        vks::VkSystemData newData {data->window,
-                                   data->surface,
-                                   data->instance,
-                                   data->pDevice,
-                                   data->lDevice,
-                                   swapRet.value(),
-                                   &world,
-                                   data->allocator};
-        world.each<vks::VkSystemData>([&newData](vks::VkSystemData& data){data = newData;});
-        spdlog::info("Resizing to {} x {}", width, height);
-    }});
-
-    //We should only remove a VkSystemData if we want the vulkan instance and all of its children destroyed
-    world.trigger<vks::VkSystemData>("OnRemoveData")
-            .event(flecs::OnRemove)
-            .each([](vks::VkSystemData& data){
-                vmaDestroyAllocator(data.allocator);
-                vkDestroySwapchainKHR(data.lDevice.device, data.swapchain.swapchain, nullptr);
-                vkDestroyDevice(data.lDevice.device, nullptr);
-                vkDestroySurfaceKHR(data.instance.instance, data.surface, nullptr);
-                vkDestroyInstance(data.instance.instance, nullptr);
-                spdlog::info("GoodBye!");
-            });
-    world.import<vks::VkModule>();
-    world.progress();
-
-
-    spdlog::info("Running");
-
-    while (!glfwWindowShouldClose(vkSystem.get<vks::VkSystemData>()->window))
+    vks::vksVkData vkData;
     {
-        world.progress();
-        glfwPollEvents();
+        VkCommandPoolCreateInfo cInfo = {};
+        cInfo.queueFamilyIndex = vkData.lDevice.get_queue_index(vkb::QueueType::graphics).value();
+        vks::CmdPoolWrapper cmdPoolWrapper(vkData.lDevice.device, cInfo);
+        vks::CmdBufferSet& cmdSet = cmdPoolWrapper.MakeSet();
+        cmdSet.AddCmdBuffers(1, VK_COMMAND_BUFFER_LEVEL_PRIMARY);
+
+        vks::WindowCallbackHandler callbackHandler(vkData.window);
+        vks::Pipeline pipeline(vkData, {});
+        callbackHandler.AddResizeCallback([](GLFWwindow*, int width, int height){spdlog::info("Resizeing window to: {} x {}", width, height);});
+        callbackHandler.AddResizeCallback(vkData.resizeCallback);
+        callbackHandler.AddResizeCallback(pipeline.create);
+        callbackHandler.AddKeyCallback([](GLFWwindow* window, int key, int scancode, int action, int mods){spdlog::info("Pressing key of code: {}, with action: {}", scancode, action);});
+
+
+        spdlog::info("Running");
+
+        while (!glfwWindowShouldClose(vkData.window))
+        {
+            glfwPollEvents();
+        }
     }
 
-
-    vkSystem.remove<vks::VkSystemData>();
 }
