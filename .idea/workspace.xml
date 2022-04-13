@@ -48,20 +48,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d525c5d0-fcab-4353-87fc-933210b4e86a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksCmdClasses.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksCommandClasses.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksGLFWCallbackHandler.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksGLFWCallbackHandler.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksImage.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksImage.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksPipeline.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksPipeline.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksVkData.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Game/VkSystem/vksVkData.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/Include/FileIO.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/Include/PipelineStateSetters.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game/Source/PipelineStateSetters.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Game/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/Source/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Game/Source/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/VkSystem/VkSystem.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/VkSystem/VkSystem.h" beforeDir="false" afterPath="$PROJECT_DIR$/Game/VkSystem/VkSystem.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/VkSystem/vksPipeline.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Game/VkSystem/vksPipeline.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/VkSystem/vksPipeline.h" beforeDir="false" afterPath="$PROJECT_DIR$/Game/VkSystem/vksPipeline.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,11 +120,6 @@
     </key>
   </component>
   <component name="RunManager" selected="CMake Application.game">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Continuous" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Game" TARGET_NAME="Continuous" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -372,6 +361,14 @@
       <workItem from="1649030626015" duration="7344000" />
       <workItem from="1649086651830" duration="1702000" />
       <workItem from="1649255450920" duration="17799000" />
+      <workItem from="1649400107900" duration="639000" />
+      <workItem from="1649444553042" duration="2283000" />
+      <workItem from="1649452830038" duration="2000" />
+      <workItem from="1649453274829" duration="21000" />
+      <workItem from="1649453313950" duration="4030000" />
+      <workItem from="1649558276351" duration="602000" />
+      <workItem from="1649609972970" duration="627000" />
+      <workItem from="1649632082985" duration="1000" />
     </task>
     <servers />
   </component>
@@ -397,8 +394,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Game/Source/main.cpp</url>
-          <line>34</line>
+          <line>38</line>
           <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Game/Source/main.cpp</url>
+          <line>22</line>
+          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

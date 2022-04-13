@@ -7,6 +7,7 @@
 #include <VkSystem.h>
 #include <flecs.h>
 #include <imgui.h>
+#include <FileIO.h>
 
 int main(){
 
@@ -18,11 +19,14 @@ int main(){
         vks::CmdBufferSet& cmdSet = cmdPoolWrapper.MakeSet();
         cmdSet.AddCmdBuffers(1, VK_COMMAND_BUFFER_LEVEL_PRIMARY);
 
+        std::vector<char> data;
+        fio::PathToBytes("/home/josh/PAT.txt", data);
+
+
+
         vks::WindowCallbackHandler callbackHandler(vkData.window);
-        vks::Pipeline pipeline(vkData, {});
         callbackHandler.AddResizeCallback([](GLFWwindow*, int width, int height){spdlog::info("Resizeing window to: {} x {}", width, height);});
         callbackHandler.AddResizeCallback(vkData.resizeCallback);
-        callbackHandler.AddResizeCallback(pipeline.create);
         callbackHandler.AddKeyCallback([](GLFWwindow* window, int key, int scancode, int action, int mods){spdlog::info("Pressing key of code: {}, with action: {}", scancode, action);});
 
 
