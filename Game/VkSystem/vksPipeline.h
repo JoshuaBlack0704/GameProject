@@ -64,10 +64,10 @@ namespace vks
 
         uint64_t AddShader(std::string filePath, VkShaderStageFlagBits stage, std::string entryPoint, const void* pNext = nullptr, VkPipelineShaderStageCreateFlagBits flags = {}, const VkSpecializationInfo* = {});
         void DeleteShader(uint64_t shaderIndex);
-        //VkPipelineShaderStageCreateInfo GetShader(uint64_t);
-        //VkShaderModule GetShaderModule(uint64_t);
-        //void Dispose();
-        //~ShaderStore();
+        VkPipelineShaderStageCreateInfo& GetShader(uint64_t index);
+        VkShaderModule GetShaderModule(uint64_t index);
+        void Dispose();
+        ~ShaderStore(){Dispose();};
 
     private:
         VkDevice device;

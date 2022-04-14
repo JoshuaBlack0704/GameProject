@@ -1,6 +1,8 @@
 #include <vksPipeline.h>
 #include <spdlog/spdlog.h>
 #include <FileIO.h>
+#include <vksTypes.h>
+
 
 vks::Pipeline::Pipeline(vksVkData &vkData)
 :device(vkData.lDevice.device), state(vks::PipelineType::GRAPHICS) {
@@ -72,19 +74,19 @@ void vks::Pipeline::Dispose() {
 }
 
 vks::PipelineState::PipelineState(PipelineType type) : type(type){
-    vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-    inputAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-    tessellationState.sType = VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO;
-    viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-    rasterizationState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-    multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-    depthStencilState.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-    colorBlendState.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-    dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-    gcInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-    ccInfo.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
-    lcInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    dynamicRenderingInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO;
+    vertexInputState.sType = vks::sType(vertexInputState);
+    inputAssemblyState.sType = vks::sType(inputAssemblyState);
+    tessellationState.sType = vks::sType(tessellationState);
+    viewportState.sType = vks::sType(viewportState);
+    rasterizationState.sType = vks::sType(rasterizationState);
+    multisampleState.sType = vks::sType(multisampleState);
+    depthStencilState.sType = vks::sType(depthStencilState);
+    colorBlendState.sType = vks::sType(colorBlendState);
+    dynamicState.sType = vks::sType(dynamicState);
+    gcInfo.sType = vks::sType(gcInfo);
+    ccInfo.sType = vks::sType(ccInfo);
+    lcInfo.sType = vks::sType(lcInfo);
+    dynamicRenderingInfo.sType = vks::sType(dynamicRenderingInfo);
 }
 
 vks::ShaderStore::ShaderStore(VkDevice device) :device(device){}
@@ -96,7 +98,7 @@ uint64_t vks::ShaderStore::AddShader(std::string filePath, VkShaderStageFlagBits
     fio::PathToBytes(filePath, code);
 
     VkShaderModuleCreateInfo moduleCreateInfo = {};
-    moduleCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    moduleCreateInfo.sType = vks::sType(moduleCreateInfo);
     moduleCreateInfo.codeSize = code.size();
     moduleCreateInfo.pCode = reinterpret_cast<uint32_t *>(code.data());
 
@@ -104,7 +106,7 @@ uint64_t vks::ShaderStore::AddShader(std::string filePath, VkShaderStageFlagBits
     //vkCreateShaderModule(device, &moduleCreateInfo, nullptr, &module);
 
     VkPipelineShaderStageCreateInfo stageCreateInfo = {};
-    stageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    stageCreateInfo.sType = vks::sType(stageCreateInfo);
     stageCreateInfo.pNext = pNext;
     stageCreateInfo.flags = flags;
     stageCreateInfo.stage = stage;
@@ -122,4 +124,18 @@ uint64_t vks::ShaderStore::AddShader(std::string filePath, VkShaderStageFlagBits
 
 void vks::ShaderStore::DeleteShader(uint64_t shaderIndex) {
     shaderStageInfos.erase(shaderStageInfos.begin() + shaderIndex);
+}
+
+VkPipelineShaderStageCreateInfo& vks::ShaderStore::GetShader(uint64_t index) {
+    return shaderStageInfos[index];
+}
+
+VkShaderModule vks::ShaderStore::GetShaderModule(uint64_t index) {
+    return shaderModules[index];
+}
+
+void vks::ShaderStore::Dispose() {
+    for (auto module : shaderModules){
+        vkDestroyShaderModule(device, module, nullptr);
+    }
 }
