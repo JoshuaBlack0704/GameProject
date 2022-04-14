@@ -48,14 +48,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d525c5d0-fcab-4353-87fc-933210b4e86a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Game/Include/FileIO.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Game/Include/PipelineStateSetters.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Game/Source/PipelineStateSetters.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Game/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Game/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/Include/FileIO.h" beforeDir="false" afterPath="$PROJECT_DIR$/Game/Include/FileIO.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game/Source/PipelineStateSetters.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Game/Source/PipelineStateSetters.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/Source/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Game/Source/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/VkSystem/vksPipeline.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Game/VkSystem/vksPipeline.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/VkSystem/vksPipeline.h" beforeDir="false" afterPath="$PROJECT_DIR$/Game/VkSystem/vksPipeline.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/external/CMakeLists.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,8 +79,8 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Game/VkSystem/VkSystem.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Game/Source/main.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Game/VkSystem/vksVkData.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Game/Source/main.cpp" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -103,9 +102,9 @@
     <property name="cf.first.check.clang-format" value="false" />
     <property name="cidr.known.project.marker" value="true" />
     <property name="cmake.loaded.for.project" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/external/Include" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="structure.view.defaults.are.configured" value="true" />
   </component>
   <component name="ReaderModeSettings">
@@ -265,6 +264,11 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="flecs" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Game" TARGET_NAME="flecs" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -369,6 +373,8 @@
       <workItem from="1649558276351" duration="602000" />
       <workItem from="1649609972970" duration="627000" />
       <workItem from="1649632082985" duration="1000" />
+      <workItem from="1649828152159" duration="5050000" />
+      <workItem from="1649902263136" duration="8860000" />
     </task>
     <servers />
   </component>
@@ -394,13 +400,17 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Game/Source/main.cpp</url>
-          <line>38</line>
+          <line>55</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Game/VkSystem/vksPipeline.cpp</url>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Game/Source/main.cpp</url>
-          <line>22</line>
-          <option name="timeStamp" value="6" />
+          <line>40</line>
+          <option name="timeStamp" value="13" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

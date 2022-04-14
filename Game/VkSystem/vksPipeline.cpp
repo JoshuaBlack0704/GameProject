@@ -1,8 +1,9 @@
 #include <vksPipeline.h>
 #include <spdlog/spdlog.h>
+#include <FileIO.h>
 
-vks::Pipeline::Pipeline(vksVkData &vkData, PipelineState& instate)
-:device(vkData.lDevice.device), state(instate) {
+vks::Pipeline::Pipeline(vksVkData &vkData)
+:device(vkData.lDevice.device), state(vks::PipelineType::GRAPHICS) {
     create = [&](){
         if (state.layout != nullptr){
             vkDestroyPipelineLayout(device, state.layout, nullptr);
@@ -84,4 +85,41 @@ vks::PipelineState::PipelineState(PipelineType type) : type(type){
     ccInfo.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
     lcInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     dynamicRenderingInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO;
+}
+
+vks::ShaderStore::ShaderStore(VkDevice device) :device(device){}
+
+uint64_t vks::ShaderStore::AddShader(std::string filePath, VkShaderStageFlagBits stage, std::string entryPoint,
+                                     const void *pNext, VkPipelineShaderStageCreateFlagBits flags,
+                                     const VkSpecializationInfo * specInfo) {
+    std::vector<char> code(10);
+    fio::PathToBytes(filePath, code);
+
+    VkShaderModuleCreateInfo moduleCreateInfo = {};
+    moduleCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    moduleCreateInfo.codeSize = code.size();
+    moduleCreateInfo.pCode = reinterpret_cast<uint32_t *>(code.data());
+
+    VkShaderModule module;
+    //vkCreateShaderModule(device, &moduleCreateInfo, nullptr, &module);
+
+    VkPipelineShaderStageCreateInfo stageCreateInfo = {};
+    stageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    stageCreateInfo.pNext = pNext;
+    stageCreateInfo.flags = flags;
+    stageCreateInfo.stage = stage;
+    stageCreateInfo.module = module;
+    entryPoints.emplace_back(entryPoint);
+    stageCreateInfo.pName = entryPoints.back().c_str();
+    stageCreateInfo.pSpecializationInfo = specInfo;
+
+    shaderModules.emplace_back();
+    shaderStageInfos.emplace_back(stageCreateInfo);
+
+    return  shaderStageInfos.size()-1;
+
+}
+
+void vks::ShaderStore::DeleteShader(uint64_t shaderIndex) {
+    shaderStageInfos.erase(shaderStageInfos.begin() + shaderIndex);
 }

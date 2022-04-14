@@ -20,8 +20,25 @@ int main(){
         cmdSet.AddCmdBuffers(1, VK_COMMAND_BUFFER_LEVEL_PRIMARY);
 
         std::vector<char> data;
-        fio::PathToBytes("/home/josh/PAT.txt", data);
+        fio::PathToBytes("/home/josh/Downloads/PAT.txt", data);
 
+
+        vks::ShaderStore shaderStore(vkData.lDevice.device);
+        uint64_t testIndex3 = 0;
+        {
+            auto testIndex = shaderStore.AddShader("/home/josh/pat", VK_SHADER_STAGE_COMPUTE_BIT,"main");
+            auto testIndex1 = shaderStore.AddShader("/home/josh/pat", VK_SHADER_STAGE_COMPUTE_BIT,"main1");
+            auto testIndex2 = shaderStore.AddShader("/home/josh/pat", VK_SHADER_STAGE_COMPUTE_BIT,"main2");
+            testIndex3 = shaderStore.AddShader("/home/josh/pat", VK_SHADER_STAGE_COMPUTE_BIT,"main3");
+            auto testIndex4 = shaderStore.AddShader("/home/josh/pat", VK_SHADER_STAGE_COMPUTE_BIT,"main4");
+            auto testIndex5 = shaderStore.AddShader("/home/josh/pat", VK_SHADER_STAGE_COMPUTE_BIT,"main5");
+            auto testIndex6 = shaderStore.AddShader("/home/josh/pat", VK_SHADER_STAGE_COMPUTE_BIT,"main6");
+            auto testIndex7 = shaderStore.AddShader("/home/josh/pat", VK_SHADER_STAGE_COMPUTE_BIT,"main7");
+        }
+
+
+
+        shaderStore.DeleteShader(testIndex3);
 
 
         vks::WindowCallbackHandler callbackHandler(vkData.window);

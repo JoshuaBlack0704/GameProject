@@ -2,6 +2,8 @@
 #include <vksVkData.h>
 #include <vksImage.h>
 #include <functional>
+#include <list>
+#include <string>
 
 namespace vks
 {
@@ -45,13 +47,32 @@ namespace vks
     class Pipeline
     {
     public:
-        Pipeline(vksVkData &vkData, PipelineState& state);
+        Pipeline(vksVkData &vkData);
         std::function<void()> create;
         PipelineState state;
+        VkDevice device;
         void Dispose();
         ~Pipeline(){Dispose();}
     private:
-        VkDevice device;
         VkPipeline pipeline;
+    };
+
+
+    class ShaderStore{
+    public:
+        ShaderStore(VkDevice device);
+
+        uint64_t AddShader(std::string filePath, VkShaderStageFlagBits stage, std::string entryPoint, const void* pNext = nullptr, VkPipelineShaderStageCreateFlagBits flags = {}, const VkSpecializationInfo* = {});
+        void DeleteShader(uint64_t shaderIndex);
+        //VkPipelineShaderStageCreateInfo GetShader(uint64_t);
+        //VkShaderModule GetShaderModule(uint64_t);
+        //void Dispose();
+        //~ShaderStore();
+
+    private:
+        VkDevice device;
+        std::vector<VkShaderModule> shaderModules;
+        std::vector<VkPipelineShaderStageCreateInfo> shaderStageInfos;
+        std::vector<std::string> entryPoints;
     };
 }
