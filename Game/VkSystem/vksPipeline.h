@@ -14,16 +14,17 @@ namespace vks
 
     struct PipelineState{
         VkPipelineCreateFlags pipelineCreateFlags = {};
-        uint32_t                                  stageCount = {};
-        std::vector<VkShaderModule> shaders;
         std::vector<VkPipelineShaderStageCreateInfo>           stages = {};
         VkPipelineVertexInputStateCreateInfo      vertexInputState = {};
         VkPipelineInputAssemblyStateCreateInfo    inputAssemblyState = {};
         VkPipelineTessellationStateCreateInfo     tessellationState = {};
+        VkViewport viewPort;
+        VkRect2D scissor;
         VkPipelineViewportStateCreateInfo         viewportState = {};
         VkPipelineRasterizationStateCreateInfo    rasterizationState = {};
         VkPipelineMultisampleStateCreateInfo      multisampleState = {};
         VkPipelineDepthStencilStateCreateInfo     depthStencilState = {};
+        std::vector<VkPipelineColorBlendAttachmentState> colorBlendAttachments = {};
         VkPipelineColorBlendStateCreateInfo       colorBlendState = {};
         VkPipelineDynamicStateCreateInfo          dynamicState = {};
         VkPipelineLayout                          layout = {};
@@ -57,22 +58,28 @@ namespace vks
         VkPipeline pipeline;
     };
 
+    struct ShaderInfo{
+        std::string filePath = {};
+        VkShaderStageFlagBits stage = {};
+        std::string entryPoint = {};
+        const void* pNext = nullptr;
+        VkPipelineShaderStageCreateFlagBits flags = {};
+        const VkSpecializationInfo* specInfo = {};
+        VkShaderModule module = {};
+        VkPipelineShaderStageCreateInfo stageInfo = {};
+    };
 
     class ShaderStore{
     public:
         ShaderStore(VkDevice device);
 
-        uint64_t AddShader(std::string filePath, VkShaderStageFlagBits stage, std::string entryPoint, const void* pNext = nullptr, VkPipelineShaderStageCreateFlagBits flags = {}, const VkSpecializationInfo* = {});
-        void DeleteShader(uint64_t shaderIndex);
-        VkPipelineShaderStageCreateInfo& GetShader(uint64_t index);
-        VkShaderModule GetShaderModule(uint64_t index);
+        ShaderInfo& AddShader(std::string filePath, VkShaderStageFlagBits stage, std::string entryPoint, const void* pNext = nullptr, VkPipelineShaderStageCreateFlagBits flags = {}, const VkSpecializationInfo* = {});
+        void ReloadShaders();
         void Dispose();
         ~ShaderStore(){Dispose();};
 
     private:
         VkDevice device;
-        std::vector<VkShaderModule> shaderModules;
-        std::vector<VkPipelineShaderStageCreateInfo> shaderStageInfos;
-        std::vector<std::string> entryPoints;
+        std::list<ShaderInfo> shaderInfos;
     };
 }

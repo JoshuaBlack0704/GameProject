@@ -91,51 +91,39 @@ vks::PipelineState::PipelineState(PipelineType type) : type(type){
 
 vks::ShaderStore::ShaderStore(VkDevice device) :device(device){}
 
-uint64_t vks::ShaderStore::AddShader(std::string filePath, VkShaderStageFlagBits stage, std::string entryPoint,
+vks::ShaderInfo& vks::ShaderStore::AddShader(std::string filePath, VkShaderStageFlagBits stage, std::string entryPoint,
                                      const void *pNext, VkPipelineShaderStageCreateFlagBits flags,
                                      const VkSpecializationInfo * specInfo) {
-    std::vector<char> code(10);
-    fio::PathToBytes(filePath, code);
-
-    VkShaderModuleCreateInfo moduleCreateInfo = {};
-    moduleCreateInfo.sType = vks::sType(moduleCreateInfo);
-    moduleCreateInfo.codeSize = code.size();
-    moduleCreateInfo.pCode = reinterpret_cast<uint32_t *>(code.data());
-
-    VkShaderModule module;
-    //vkCreateShaderModule(device, &moduleCreateInfo, nullptr, &module);
-
-    VkPipelineShaderStageCreateInfo stageCreateInfo = {};
-    stageCreateInfo.sType = vks::sType(stageCreateInfo);
-    stageCreateInfo.pNext = pNext;
-    stageCreateInfo.flags = flags;
-    stageCreateInfo.stage = stage;
-    stageCreateInfo.module = module;
-    entryPoints.emplace_back(entryPoint);
-    stageCreateInfo.pName = entryPoints.back().c_str();
-    stageCreateInfo.pSpecializationInfo = specInfo;
-
-    shaderModules.emplace_back();
-    shaderStageInfos.emplace_back(stageCreateInfo);
-
-    return  shaderStageInfos.size()-1;
-
+    shaderInfos.emplace_back(vks::ShaderInfo{filePath,stage,entryPoint,pNext,flags,specInfo});
+    return shaderInfos.back();
 }
 
-void vks::ShaderStore::DeleteShader(uint64_t shaderIndex) {
-    shaderStageInfos.erase(shaderStageInfos.begin() + shaderIndex);
-}
+void vks::ShaderStore::ReloadShaders() {
+    Dispose();
+    for(auto& info : shaderInfos){
+        std::vector<char> code(1);
+        fio::PathToBytes(info.filePath, code);
 
-VkPipelineShaderStageCreateInfo& vks::ShaderStore::GetShader(uint64_t index) {
-    return shaderStageInfos[index];
-}
+        VkShaderModuleCreateInfo moduleCreateInfo = {};
+        moduleCreateInfo.sType = vks::sType(moduleCreateInfo);
+        moduleCreateInfo.pNext = info.pNext;
+        moduleCreateInfo.flags = info.flags;
+        moduleCreateInfo.codeSize = code.size();
+        moduleCreateInfo.pCode = reinterpret_cast<uint32_t *>(code.data());
+        vkCreateShaderModule(device, &moduleCreateInfo, nullptr, &info.module);
 
-VkShaderModule vks::ShaderStore::GetShaderModule(uint64_t index) {
-    return shaderModules[index];
+        info.stageInfo = {};
+        info.stageInfo.sType = vks::sType(info.stageInfo);
+        info.stageInfo.module = info.module;
+        info.stageInfo.stage = info.stage;
+        info.stageInfo.pName = info.entryPoint.c_str();
+        info.stageInfo.pSpecializationInfo = info.specInfo;
+
+    }
 }
 
 void vks::ShaderStore::Dispose() {
-    for (auto module : shaderModules){
-        vkDestroyShaderModule(device, module, nullptr);
+    for (auto& info : shaderInfos){
+        vkDestroyShaderModule(device, info.module, nullptr);
     }
 }
