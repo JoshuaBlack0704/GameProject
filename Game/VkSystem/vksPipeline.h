@@ -4,9 +4,12 @@
 #include <functional>
 #include <list>
 #include <string>
+#include <glm/glm.hpp>
 
 namespace vks
 {
+
+
     enum class PipelineType
     {
         GRAPHICS = 0, COMPUTE = 1
@@ -15,6 +18,8 @@ namespace vks
     struct PipelineState{
         VkPipelineCreateFlags pipelineCreateFlags = {};
         std::vector<VkPipelineShaderStageCreateInfo>           stages = {};
+        std::vector<VkVertexInputBindingDescription> vBindings;
+        std::vector<VkVertexInputAttributeDescription> vAttributes;
         VkPipelineVertexInputStateCreateInfo      vertexInputState = {};
         VkPipelineInputAssemblyStateCreateInfo    inputAssemblyState = {};
         VkPipelineTessellationStateCreateInfo     tessellationState = {};
@@ -38,6 +43,7 @@ namespace vks
         vks::Image* image = nullptr;
         PipelineType type;
         std::vector<VkPushConstantRange> pushRanges = {};
+        std::vector<VkFormat> dynamicRenderColorFormats = {};
         VkPipelineRenderingCreateInfo dynamicRenderingInfo = {};
 
         //Sets all of the sTypes for the state structs
@@ -55,7 +61,7 @@ namespace vks
         void Dispose();
         ~Pipeline(){Dispose();}
     private:
-        VkPipeline pipeline;
+        VkPipeline pipeline = nullptr;
     };
 
     struct ShaderInfo{

@@ -4,6 +4,8 @@
 #include <vksTypes.h>
 
 
+
+
 vks::Pipeline::Pipeline(vksVkData &vkData)
 :device(vkData.lDevice.device), state(vks::PipelineType::GRAPHICS) {
     create = [&](){
@@ -25,7 +27,7 @@ vks::Pipeline::Pipeline(vksVkData &vkData)
             vkCreatePipelineLayout(device, &state.lcInfo, nullptr, &state.layout);
 
             gcInfo.flags = state.pipelineCreateFlags;
-            gcInfo.stageCount = state.stageCount;
+            gcInfo.stageCount = state.stages.size();
             gcInfo.pStages = state.stages.data();
             gcInfo.pVertexInputState = &state.vertexInputState;
             gcInfo.pInputAssemblyState = &state.inputAssemblyState;
@@ -118,6 +120,7 @@ void vks::ShaderStore::ReloadShaders() {
         info.stageInfo.stage = info.stage;
         info.stageInfo.pName = info.entryPoint.c_str();
         info.stageInfo.pSpecializationInfo = info.specInfo;
+
 
     }
 }

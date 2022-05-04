@@ -7,7 +7,9 @@
 #include <VkSystem.h>
 #include <flecs.h>
 #include <imgui.h>
-#include <FileIO.h>
+#include <PipelineStateSetters.h>
+
+
 
 int main(){
 
@@ -20,14 +22,19 @@ int main(){
         cmdSet.AddCmdBuffers(1, VK_COMMAND_BUFFER_LEVEL_PRIMARY);
 
         vks::ShaderStore shaderStore(vkData.lDevice.device);
-        auto vertexShader = shaderStore.AddShader("simpletrianglevert.spv", VK_SHADER_STAGE_VERTEX_BIT, "main");
-        auto fragmentShader = shaderStore.AddShader("simpletrianglefrag.spv", VK_SHADER_STAGE_FRAGMENT_BIT, "main");
+        auto& vertexShader = shaderStore.AddShader("simpletrianglevert.spv", VK_SHADER_STAGE_VERTEX_BIT, "main");
+        auto& fragmentShader = shaderStore.AddShader("simpletrianglefrag.spv", VK_SHADER_STAGE_FRAGMENT_BIT, "main");
         shaderStore.ReloadShaders();
 
         vks::WindowCallbackHandler callbackHandler(vkData.window);
         callbackHandler.AddResizeCallback([](GLFWwindow*, int width, int height){spdlog::info("Resizeing window to: {} x {}", width, height);});
         callbackHandler.AddResizeCallback(vkData.resizeCallback);
         callbackHandler.AddKeyCallback([](GLFWwindow* window, int key, int scancode, int action, int mods){spdlog::info("Pressing key of code: {}, with action: {}", scancode, action);});
+
+        vks::Pipeline graphicsPipeline(vkData);
+        simpleTrianglePipeline(graphicsPipeline.state, {vertexShader, fragmentShader}, vkData.swapchain);
+        graphicsPipeline.create();
+
 
 
         spdlog::info("Running");
