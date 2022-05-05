@@ -2,6 +2,7 @@
 #include <vulkan/vulkan.h>
 #include <functional>
 #include <list>
+#include <vector>
 
 namespace vks
 {

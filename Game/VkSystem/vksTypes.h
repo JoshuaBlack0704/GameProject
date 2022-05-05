@@ -19,5 +19,7 @@ namespace vks
     VkStructureType sType(VkComputePipelineCreateInfo&);
     VkStructureType sType(VkPipelineLayoutCreateInfo&);
     VkStructureType sType(VkPipelineRenderingCreateInfo&);
+    VkStructureType sType(VkBufferCreateInfo&);
+    VkStructureType sType(VkImageCreateInfo&);
 
 }
