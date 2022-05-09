@@ -6,7 +6,7 @@
 
 
 
-vks::Pipeline::Pipeline(vksVkData &vkData)
+vks::Pipeline::Pipeline(VkData &vkData)
 :device(vkData.lDevice.device), state(vks::PipelineType::GRAPHICS) {
     create = [&](){
         if (state.layout != nullptr){

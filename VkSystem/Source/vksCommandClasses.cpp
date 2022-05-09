@@ -1,14 +1,16 @@
 #include <vksCmdClasses.h>
 #include <spdlog/spdlog.h>
 
-vks::CmdPoolWrapper::CmdPoolWrapper(VkDevice device, VkCommandPoolCreateInfo &cInfo) : device(device), cInfo(cInfo) {
+vks::CmdPoolWrapper::CmdPoolWrapper(VkDevice device, VkCommandPoolCreateInfo &cInfo, std::string name) : device(device), cInfo(cInfo), name(name) {
     cInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     vkCreateCommandPool(device, &cInfo, nullptr, &cmdPool);
+    spdlog::info("Creating CmdPoolWrapper class \"{}\"", name);
 }
 
-vks::CmdBufferSet& vks::CmdPoolWrapper::MakeSet() {
-    CmdBufferSet set(device, cmdPool);
+vks::CmdBufferSet& vks::CmdPoolWrapper::MakeSet(std::string cmdSetName) {
+    CmdBufferSet set(device, cmdPool, cmdSetName);
     cmdSets.emplace_back(set);
+    spdlog::info("CmdPoolWrapper Class \"{}\" created a CmdSetClass \"{}\"", name, cmdSetName);
     return cmdSets.back();
 }
 
@@ -23,10 +25,10 @@ void vks::CmdPoolWrapper::Reset() {
 
 void vks::CmdPoolWrapper::Dispose() {
     vkDestroyCommandPool(device, cmdPool, nullptr);
-    spdlog::info("Disposing CmdPoolWrapper");
+    spdlog::info("Disposing CmdPoolWrapper class \"{}\"", name);
 }
 
-vks::CmdBufferSet::CmdBufferSet(VkDevice device, VkCommandPool parentPool) : device(device), parentPool(parentPool){}
+vks::CmdBufferSet::CmdBufferSet(VkDevice device, VkCommandPool parentPool, std::string name) : device(device), parentPool(parentPool), name(name) {}
 
 vks::CmdBufferSet& vks::CmdBufferSet::AddCmdBuffers(uint32_t count, VkCommandBufferLevel level) {
     VkCommandBufferAllocateInfo aInfo = {};
@@ -62,3 +64,5 @@ void vks::CmdBufferSet::Record() {
         operations[i](cmdBuffers[i]);
     }
 }
+
+VkCommandBuffer *vks::CmdBufferSet::pCommandBuffers() {return cmdBuffers.data();}

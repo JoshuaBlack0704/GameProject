@@ -54,7 +54,7 @@ namespace vks
     class Pipeline
     {
     public:
-        Pipeline(vksVkData &vkData);
+        Pipeline(VkData &vkData);
         std::function<void()> create;
         PipelineState state;
         VkDevice device;

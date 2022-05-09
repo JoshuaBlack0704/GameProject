@@ -9,7 +9,7 @@
 
 namespace vks
 {
-    struct vksVkData
+    struct VkData
     {
         GLFWwindow* window = nullptr;
         VkSurfaceKHR surface;
@@ -19,10 +19,10 @@ namespace vks
         vkb::Swapchain swapchain;
         VmaAllocator allocator;
         std::function<void()> resizeCallback;
-        vksVkData();
+        VkData(VkSurfaceKHR surface);
         void Dispose();
 
-        ~vksVkData(){Dispose();}
+        ~VkData(){Dispose();}
     };
 }
 

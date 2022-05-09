@@ -2,11 +2,10 @@
 #include <vulkan/vulkan.h>
 #include <VkBootstrap.h>
 #include <vk_mem_alloc.h>
-#include <functional>
 
 namespace vks
 {
-    struct vksVkData
+    struct VkData
     {
         VkSurfaceKHR surface;
         vkb::Instance instance;
@@ -14,11 +13,10 @@ namespace vks
         vkb::Device lDevice;
         vkb::Swapchain swapchain;
         VmaAllocator allocator;
-        std::function<void()> resizeCallback;
-        vksVkData();
+        VkData(VkSurfaceKHR surface = nullptr);
         void Dispose();
 
-        ~vksVkData(){Dispose();}
+        ~VkData(){Dispose();}
     };
 }
 

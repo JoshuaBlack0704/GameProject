@@ -1,12 +1,21 @@
 #include <vksPipeline.h>
 #include <spdlog/spdlog.h>
-#include <FileIO.h>
+#include <fstream>
 #include <vksTypes.h>
 
+void PathToBytes(std::string path, std::vector<char>& outputBuffer){
+    std::string data;
+    std::ifstream readStream;
+    readStream.open(path, std::ios::ate | std::ios::binary);
+    uint64_t size = readStream.tellg();
+    outputBuffer.resize(size);
+    readStream.seekg(0);
+    readStream.read(outputBuffer.data(), static_cast<uint32_t>(size));
+    readStream.close();
+}
 
 
-
-vks::Pipeline::Pipeline(vksVkData &vkData)
+vks::Pipeline::Pipeline(VkData &vkData)
 :device(vkData.lDevice.device), state(vks::PipelineType::GRAPHICS) {
     create = [&](){
         if (state.layout != nullptr){
@@ -104,7 +113,7 @@ void vks::ShaderStore::ReloadShaders() {
     Dispose();
     for(auto& info : shaderInfos){
         std::vector<char> code(1);
-        fio::PathToBytes(info.filePath, code);
+        PathToBytes(info.filePath, code);
 
         VkShaderModuleCreateInfo moduleCreateInfo = {};
         moduleCreateInfo.sType = vks::sType(moduleCreateInfo);

@@ -3,7 +3,7 @@
 #include <spdlog/spdlog.h>
 
 
-vks::vksVkData::vksVkData() {
+vks::VkData::VkData(VkSurfaceKHR surface) {
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     window = glfwCreateWindow(100, 100, "Game", nullptr, nullptr);
@@ -11,7 +11,7 @@ vks::vksVkData::vksVkData() {
             .require_api_version(VK_API_VERSION_1_3)
             .set_app_name("GameProject")
             .set_app_version(0,0,1)
-            .set_engine_name("vksVkData")
+            .set_engine_name("VkData")
             .set_engine_version(0,0,1)
 #ifndef NDEBUG
             .enable_validation_layers()
@@ -91,11 +91,11 @@ vks::vksVkData::vksVkData() {
     vmaCreateAllocator(&alocCreateInfo, &allocator);
 }
 
-void vks::vksVkData::Dispose() {
+void vks::VkData::Dispose() {
     vmaDestroyAllocator(allocator);
     vkDestroySwapchainKHR(lDevice.device, swapchain.swapchain, nullptr);
     vkDestroyDevice(lDevice.device, nullptr);
     vkDestroySurfaceKHR(instance, surface, nullptr);
     vkDestroyInstance(instance, nullptr);
-    spdlog::info("Disposing vksVkData");
+    spdlog::info("Disposing VkData");
 }

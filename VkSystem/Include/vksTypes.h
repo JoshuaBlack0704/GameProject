@@ -21,5 +21,7 @@ namespace vks
     VkStructureType sType(VkPipelineRenderingCreateInfo&);
     VkStructureType sType(VkBufferCreateInfo&);
     VkStructureType sType(VkImageCreateInfo&);
-
+    VkStructureType sType(VkSubmitInfo&);
+    VkStructureType sType(VkMemoryBarrier&);
+    VkStructureType sType(VkCommandBufferBeginInfo&);
 }

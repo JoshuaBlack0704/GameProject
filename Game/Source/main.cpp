@@ -13,7 +13,7 @@
 
 int main(){
 
-    vks::vksVkData vkData;
+    vks::VkData vkData(nullptr_t);
     {
         VkCommandPoolCreateInfo cInfo = {};
         cInfo.queueFamilyIndex = vkData.lDevice.get_queue_index(vkb::QueueType::graphics).value();

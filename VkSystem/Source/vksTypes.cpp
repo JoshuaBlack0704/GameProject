@@ -20,4 +20,8 @@ namespace vks
     VkStructureType sType(VkPipelineRenderingCreateInfo&){return VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO;}
     VkStructureType sType(VkBufferCreateInfo&){return VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;}
     VkStructureType sType(VkImageCreateInfo&){return VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;}
+    VkStructureType sType(VkSubmitInfo&){return VK_STRUCTURE_TYPE_SUBMIT_INFO;}
+    VkStructureType sType(VkMemoryBarrier&){return VK_STRUCTURE_TYPE_MEMORY_BARRIER;}
+    VkStructureType sType(VkCommandBufferBeginInfo&){return VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;}
+
 }

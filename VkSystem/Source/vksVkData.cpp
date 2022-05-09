@@ -3,15 +3,12 @@
 #include <spdlog/spdlog.h>
 
 
-vks::vksVkData::vksVkData() {
-    glfwInit();
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    window = glfwCreateWindow(100, 100, "Game", nullptr, nullptr);
+vks::VkData::VkData(VkSurfaceKHR surfaceHandle) : surface(surfaceHandle) {
     auto instRet = vkb::InstanceBuilder()
             .require_api_version(VK_API_VERSION_1_3)
             .set_app_name("GameProject")
             .set_app_version(0,0,1)
-            .set_engine_name("vksVkData")
+            .set_engine_name("VkData")
             .set_engine_version(0,0,1)
 #ifndef NDEBUG
             .enable_validation_layers()
@@ -27,26 +24,28 @@ vks::vksVkData::vksVkData() {
 
     instance = instRet.value();
 
-    glfwCreateWindowSurface(instance.instance, window, nullptr, &surface);
-
-    VkPhysicalDeviceFeatures features{};
+    VkPhysicalDeviceFeatures features = {};
     features.samplerAnisotropy = VK_TRUE;
-    VkPhysicalDeviceVulkan11Features features11{};
-    VkPhysicalDeviceVulkan12Features features12{};
+    VkPhysicalDeviceVulkan11Features features11 = {};
+    VkPhysicalDeviceVulkan12Features features12 = {};
     features12.timelineSemaphore = VK_TRUE;
-    VkPhysicalDeviceVulkan13Features features13{};
+    VkPhysicalDeviceVulkan13Features features13 = {};
     features13.dynamicRendering = VK_TRUE;
 
+    auto pDeviceSel = vkb::PhysicalDeviceSelector(instance);
+    pDeviceSel.set_required_features(features);
+    pDeviceSel.set_required_features_11(features11);
+    pDeviceSel.set_required_features_12(features12);
+    pDeviceSel.set_required_features_13(features13);
+    pDeviceSel.require_present(false);
+    if (surface != VK_NULL_HANDLE){
+        spdlog::info("Requiring a Surface");
+        pDeviceSel.add_required_extension(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+        pDeviceSel.set_surface(surface);
+        pDeviceSel.require_present();
+    }
+    auto pDeviceRet = pDeviceSel.select();
 
-    auto pDeviceRet = vkb::PhysicalDeviceSelector(instance)
-            .set_surface(surface)
-            .add_required_extension(VK_KHR_SWAPCHAIN_EXTENSION_NAME)
-            .set_required_features(features)
-            .set_required_features_11(features11)
-            .set_required_features_12(features12)
-            .set_required_features_13(features13)
-            .require_present()
-            .select();
     if (!pDeviceRet){
         spdlog::error("Could not select physical device");
         abort();
@@ -61,17 +60,7 @@ vks::vksVkData::vksVkData() {
     }
     lDevice = lDevRet.value();
 
-    auto swapRet = vkb::SwapchainBuilder(lDevice)
-            .set_old_swapchain(swapchain)
-            .build();
-    if (!swapRet){
-        spdlog::error("Could not create swapchain");
-        abort();
-    }
-
-    swapchain = swapRet.value();
-
-    resizeCallback = [&](){
+    if (surface != VK_NULL_HANDLE){
         auto swapRet = vkb::SwapchainBuilder(lDevice)
                 .set_old_swapchain(swapchain)
                 .build();
@@ -80,7 +69,7 @@ vks::vksVkData::vksVkData() {
             abort();
         }
         swapchain = swapRet.value();
-    };
+    }
 
 
     VmaAllocatorCreateInfo alocCreateInfo {};
@@ -91,11 +80,15 @@ vks::vksVkData::vksVkData() {
     vmaCreateAllocator(&alocCreateInfo, &allocator);
 }
 
-void vks::vksVkData::Dispose() {
+void vks::VkData::Dispose() {
     vmaDestroyAllocator(allocator);
+    if (swapchain.swapchain != VK_NULL_HANDLE){
     vkDestroySwapchainKHR(lDevice.device, swapchain.swapchain, nullptr);
+    }
     vkDestroyDevice(lDevice.device, nullptr);
-    vkDestroySurfaceKHR(instance, surface, nullptr);
+    if (surface != VK_NULL_HANDLE){
+        vkDestroySurfaceKHR(instance, surface, nullptr);
+    }
     vkDestroyInstance(instance, nullptr);
-    spdlog::info("Disposing vksVkData");
+    spdlog::info("Disposing VkData");
 }
