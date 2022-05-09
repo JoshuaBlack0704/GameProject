@@ -7,6 +7,8 @@ enable_testing()
 find_package(Vulkan REQUIRED)
 
 add_subdirectory(external)
+add_subdirectory(VkSystem)
+add_subdirectory(CommonSystems)
 add_subdirectory(Game)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

@@ -1,0 +1,5 @@
+file(GLOB StorageBufferTestSRC "StorageBufferTest/*.cpp")
+file(GLOB StorageBufferTestINCL "StorageBufferTest/*.h")
+add_executable(StorageBufferTest ${StorageBufferTestSRC} ${StorageBufferTestINCL} )
+target_link_libraries(StorageBufferTest PRIVATE Vulkan::Vulkan spdlog::spdlog VkSystem)
+target_include_directories(StorageBufferTest PRIVATE ${VMA_INCLUDE})

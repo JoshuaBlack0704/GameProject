@@ -4,12 +4,24 @@
     "type": "split",
     "children": [
       {
-        "id": "c622bf6ed0958d17",
+        "id": "bc1255b558405fd6",
         "type": "leaf",
         "state": {
           "type": "markdown",
           "state": {
-            "file": "What Is Needed.md",
+            "file": "AI General Idea.md",
+            "mode": "source",
+            "source": true
+          }
+        }
+      },
+      {
+        "id": "5e1953bcd88fb900",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Consideration Matrix System.md",
             "mode": "source",
             "source": true
           }
@@ -69,7 +81,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "What Is Needed.md",
+                "file": "AI General Idea.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -87,8 +99,10 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "c622bf6ed0958d17",
+  "active": "bc1255b558405fd6",
   "lastOpenFiles": [
+    "AI General Idea.md",
+    "Consideration Matrix System.md",
     "What Is Needed.md",
     "Main Parts.md"
   ]
