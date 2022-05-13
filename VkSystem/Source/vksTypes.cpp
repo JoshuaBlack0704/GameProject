@@ -23,5 +23,9 @@ namespace vks
     VkStructureType sType(VkSubmitInfo&){return VK_STRUCTURE_TYPE_SUBMIT_INFO;}
     VkStructureType sType(VkMemoryBarrier&){return VK_STRUCTURE_TYPE_MEMORY_BARRIER;}
     VkStructureType sType(VkCommandBufferBeginInfo&){return VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;}
+    VkStructureType sType(VkSemaphoreTypeCreateInfo&){return VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO;}
+    VkStructureType sType(VkSemaphoreCreateInfo&){return VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;}
+    VkStructureType sType(VkTimelineSemaphoreSubmitInfo&){return VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO;}
+
 
 }

@@ -24,4 +24,7 @@ namespace vks
     VkStructureType sType(VkSubmitInfo&);
     VkStructureType sType(VkMemoryBarrier&);
     VkStructureType sType(VkCommandBufferBeginInfo&);
+    VkStructureType sType(VkSemaphoreCreateInfo&);
+    VkStructureType sType(VkSemaphoreTypeCreateInfo&);
+    VkStructureType sType(VkTimelineSemaphoreSubmitInfo&);
 }

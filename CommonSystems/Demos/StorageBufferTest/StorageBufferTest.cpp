@@ -43,12 +43,12 @@ int main(){
 
             vkBeginCommandBuffer(cmd, &beginInfo);
 
-            gpuStorage.EnsureCapacity(stageBuffer.allocationInfo.size);
+            gpuStorage.EnsureCapacity(stageBuffer.allocationInfo.size, nullptr, 0);
             stageBuffer.TransferToBuffer(cmd, gpuStorage, 0, 0, stageBuffer.allocationInfo.size);
             VkMemoryBarrier transferBarrier = {};
             transferBarrier.sType = vks::sType(transferBarrier);
-            transferBarrier.srcAccessMask = VK_ACCESS_2_NONE;
-            transferBarrier.dstAccessMask = VK_ACCESS_2_TRANSFER_WRITE_BIT;
+            transferBarrier.srcAccessMask = VK_ACCESS_2_MEMORY_WRITE_BIT;
+            transferBarrier.dstAccessMask = VK_ACCESS_2_MEMORY_READ_BIT;
             vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, {}, 1, &transferBarrier, 0, {}, 0, {});
             receiveBuffer.TransferFromBuffer(cmd, gpuStorage, 0, 0, gpuStorage.allocationInfo.size);
 

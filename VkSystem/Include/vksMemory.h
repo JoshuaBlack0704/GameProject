@@ -20,16 +20,16 @@ namespace vks{
         void FlushAndInvalidate();
         void Map();
         void UnMap();
-        void EnsureCapacity(uint64_t size);
-        void Resize(uint64_t size);
+        void EnsureCapacity(VkCommandBuffer cmd, VkSemaphore cleanupSignal, uint64_t size);
+        void Resize(VkCommandBuffer cmd, VkSemaphore cleanupSignal, uint64_t size);
         ~Memory(){Dispose();}
     private:
-        VmaAllocator allocator;
+        VmaAllocator allocator = nullptr;
         VkBufferCreateInfo bcInfo = {};
         VkImageCreateInfo icInfo = {};
         VmaAllocationCreateInfo acInfo = {};
         VmaAllocation allocation = nullptr;
-        std::string name;
+        std::string name = {};
     };
 
 }
