@@ -7,13 +7,13 @@ namespace vks{
     class TimelineSemaphore{
     public:
         TimelineSemaphore(VkDevice device, uint64_t startingCount);
-        void Wait();
+        void Wait(uint64_t timeout = UINT64_MAX);
         void SetSignalCount(uint64_t newCount);
         VkTimelineSemaphoreSubmitInfo GetSubmitInfo(bool incrementSignalCount, std::vector<TimelineSemaphore *> waitTimelineSemaphores);
         uint64_t GetSignalCount();
         void Signal();
         void IncrementSignalCount();
-        VkSemaphore GetSemaphore();
+        VkSemaphore & GetSemaphore();
         void Dispose();
         ~TimelineSemaphore(){Dispose();}
 

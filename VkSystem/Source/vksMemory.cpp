@@ -73,30 +73,58 @@ namespace vks
         }
     }
 
-    void Memory::TransferToBuffer(VkCommandBuffer cmd, Memory &dst, uint64_t srcOffset, uint64_t dstOffset, uint64_t size) {
+    void Memory::TransferToBuffer(VkCommandBuffer cmd, Memory &dst, uint64_t srcOffset, uint64_t dstOffset, uint64_t size, bool barrier) {
         assert(buffer != nullptr && dst.buffer != nullptr);
+        if (barrier){
+            VkMemoryBarrier transferBarrier = {};
+            transferBarrier.sType = vks::sType(transferBarrier);
+            transferBarrier.srcAccessMask = VK_ACCESS_2_MEMORY_WRITE_BIT;
+            transferBarrier.dstAccessMask = VK_ACCESS_2_MEMORY_READ_BIT;
+            vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, {}, 1, &transferBarrier, 0, {}, 0, {});
+        }
         VkBufferCopy copy = {};
         copy.srcOffset = srcOffset;
         copy.dstOffset = dstOffset;
         copy.size = size;
         vkCmdCopyBuffer(cmd, buffer, dst.buffer, 1, &copy);
+        if (barrier){
+            VkMemoryBarrier transferBarrier = {};
+            transferBarrier.sType = vks::sType(transferBarrier);
+            transferBarrier.srcAccessMask = VK_ACCESS_2_MEMORY_WRITE_BIT;
+            transferBarrier.dstAccessMask = VK_ACCESS_2_MEMORY_READ_BIT;
+            vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, {}, 1, &transferBarrier, 0, {}, 0, {});
+        }
     }
 
-    void Memory::TransferFromBuffer(VkCommandBuffer cmd, Memory &src, uint64_t srcOffset, uint64_t dstOffset, uint64_t size) {
+    void Memory::TransferFromBuffer(VkCommandBuffer cmd, Memory &src, uint64_t srcOffset, uint64_t dstOffset, uint64_t size, bool barrier) {
         assert(buffer != nullptr && src.buffer != nullptr);
+        if (barrier){
+            VkMemoryBarrier transferBarrier = {};
+            transferBarrier.sType = vks::sType(transferBarrier);
+            transferBarrier.srcAccessMask = VK_ACCESS_2_MEMORY_WRITE_BIT;
+            transferBarrier.dstAccessMask = VK_ACCESS_2_MEMORY_READ_BIT;
+            vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, {}, 1, &transferBarrier, 0, {}, 0, {});
+        }
         VkBufferCopy copy = {};
         copy.srcOffset = srcOffset;
         copy.dstOffset = dstOffset;
         copy.size = size;
         vkCmdCopyBuffer(cmd, src.buffer, buffer, 1, &copy);
+        if (barrier){
+            VkMemoryBarrier transferBarrier = {};
+            transferBarrier.sType = vks::sType(transferBarrier);
+            transferBarrier.srcAccessMask = VK_ACCESS_2_MEMORY_WRITE_BIT;
+            transferBarrier.dstAccessMask = VK_ACCESS_2_MEMORY_READ_BIT;
+            vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, {}, 1, &transferBarrier, 0, {}, 0, {});
+        }
     }
 
-    void Memory::EnsureCapacity(VkCommandBuffer cmd, VkSemaphore cleanupSignal, uint64_t size) {
+    void Memory::EnsureCapacity(VkCommandBuffer cmd, TimelineSemaphore &signal, uint64_t size) {
         assert(buffer != nullptr);
-        if (size > allocationInfo.size) { Resize(cmd, cleanupSignal, size);}
+        if (size > allocationInfo.size) { Resize(cmd, signal, size);}
     }
 
-    void Memory::Resize(VkCommandBuffer cmd, VkSemaphore cleanupSignal, uint64_t size) {
+    void Memory::Resize(VkCommandBuffer cmd, TimelineSemaphore &signal, uint64_t size) {
         VkMemoryBarrier transferBarrier = {};
         transferBarrier.sType = vks::sType(transferBarrier);
         transferBarrier.srcAccessMask = VK_ACCESS_2_MEMORY_WRITE_BIT;
@@ -121,9 +149,11 @@ namespace vks
 
         vkCmdCopyBuffer(cmd, buffer, tempBuffer, 1, &copy);
 
-        std::thread destoryThread([](VkBuffer buffer, VmaAllocation allocation, VkSemaphore cleanupSignal){
-            wait
-            }, buffer, allocation, cleanupSignal);
+        std::thread destoryThread([](VmaAllocator allocator, VkBuffer buffer, VmaAllocation allocation, TimelineSemaphore* cleanupSignal){
+            cleanupSignal->Wait();
+            vmaDestroyBuffer(allocator, buffer, allocation);
+            }, allocator, buffer, allocation, &signal);
+        destoryThread.detach();
 
         vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, {}, 1, &transferBarrier, 0, {}, 0, {});
 

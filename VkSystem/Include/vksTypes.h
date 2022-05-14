@@ -27,4 +27,6 @@ namespace vks
     VkStructureType sType(VkSemaphoreCreateInfo&);
     VkStructureType sType(VkSemaphoreTypeCreateInfo&);
     VkStructureType sType(VkTimelineSemaphoreSubmitInfo&);
+    VkStructureType sType(VkSemaphoreWaitInfo&);
+    VkStructureType sType(VkSemaphoreSignalInfo&);
 }

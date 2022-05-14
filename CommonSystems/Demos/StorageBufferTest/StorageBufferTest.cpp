@@ -10,7 +10,7 @@ int main(){
 
         VkBufferCreateInfo bcInfo = {};
         bcInfo.size = message.size();
-        bcInfo.usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+        bcInfo.usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
         VmaAllocationCreateInfo acInfo = {};
         acInfo.usage = VMA_MEMORY_USAGE_CPU_ONLY;
 
@@ -30,44 +30,47 @@ int main(){
         vks::Memory receiveBuffer(vkData.allocator, "Receive Buffer");
         receiveBuffer.SetAsBuffer(bcInfo, acInfo);
 
+        vks::TimelineSemaphore signal(vkData.lDevice.device, 0);
+
         VkCommandPoolCreateInfo cInfo = {};
         cInfo.queueFamilyIndex = vkData.lDevice.get_queue_index(vkb::QueueType::transfer).value();
         vks::CmdPoolWrapper cmdPool(vkData.lDevice.device, cInfo, "Main Command Pool");
 
         auto& sendSet = cmdPool.MakeSet("Main Command Set");
         sendSet.AddCmdBuffers(1, VK_COMMAND_BUFFER_LEVEL_PRIMARY);
-        sendSet.SetFunctions({[&stageBuffer, &gpuStorage, &receiveBuffer](VkCommandBuffer cmd){
+        sendSet.SetFunctions({[&stageBuffer, &gpuStorage, &receiveBuffer, &signal](VkCommandBuffer cmd){
+
 
             VkCommandBufferBeginInfo beginInfo = {};
             beginInfo.sType = vks::sType(beginInfo);
 
             vkBeginCommandBuffer(cmd, &beginInfo);
 
-            gpuStorage.EnsureCapacity(stageBuffer.allocationInfo.size, nullptr, 0);
-            stageBuffer.TransferToBuffer(cmd, gpuStorage, 0, 0, stageBuffer.allocationInfo.size);
-            VkMemoryBarrier transferBarrier = {};
-            transferBarrier.sType = vks::sType(transferBarrier);
-            transferBarrier.srcAccessMask = VK_ACCESS_2_MEMORY_WRITE_BIT;
-            transferBarrier.dstAccessMask = VK_ACCESS_2_MEMORY_READ_BIT;
-            vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, {}, 1, &transferBarrier, 0, {}, 0, {});
-            receiveBuffer.TransferFromBuffer(cmd, gpuStorage, 0, 0, gpuStorage.allocationInfo.size);
-
+            gpuStorage.EnsureCapacity(cmd,  signal, stageBuffer.allocationInfo.size);
+            receiveBuffer.EnsureCapacity(cmd, signal, stageBuffer.allocationInfo.size);
+            stageBuffer.TransferToBuffer(cmd, gpuStorage, 0, 0, stageBuffer.allocationInfo.size, true);
+            receiveBuffer.TransferFromBuffer(cmd, gpuStorage, 0, 0, gpuStorage.allocationInfo.size, false);
 
             vkEndCommandBuffer(cmd);
         }});
-        sendSet.Record();
 
         auto transferQueue = vkData.lDevice.get_queue(vkb::QueueType::transfer).value();
 
+        auto timelineInfo = signal.GetSubmitInfo(true, {});
         VkSubmitInfo submit = {};
         submit.sType = vks::sType(submit);
+        submit.pNext = &timelineInfo;
         submit.commandBufferCount = 1;
         submit.pCommandBuffers = sendSet.pCommandBuffers();
+        submit.waitSemaphoreCount = 0;
+        submit.pWaitSemaphores = nullptr;
+        submit.signalSemaphoreCount = 1;
+        submit.pSignalSemaphores = &signal.GetSemaphore();
 
+        sendSet.Record();
         vkQueueSubmit(transferQueue, 1, &submit, VK_NULL_HANDLE);
 
-        vkQueueWaitIdle(transferQueue);
-
+        signal.Wait();
 
 
         receiveBuffer.FlushAndInvalidate();

@@ -13,7 +13,7 @@ namespace vks{
         tcInfo.initialValue = startingCount;
         signalCount = startingCount;
 
-        VkSemaphoreCreateInfo scInfo;
+        VkSemaphoreCreateInfo scInfo = {};
         scInfo.sType = sType(scInfo);
         scInfo.pNext = &tcInfo;
         vkCreateSemaphore(device, &scInfo, nullptr, &timelineSemaphore);
@@ -45,7 +45,7 @@ namespace vks{
 
         VkTimelineSemaphoreSubmitInfo tsInfo = {};
         tsInfo.sType = sType(tsInfo);
-        tsInfo.waitSemaphoreValueCount = waitValues.size();
+        tsInfo.waitSemaphoreValueCount = static_cast<uint32_t>(waitValues.size());
         tsInfo.pWaitSemaphoreValues = waitValues.data();
         tsInfo.signalSemaphoreValueCount = 1;
         tsInfo.pSignalSemaphoreValues = &signalCount;
@@ -54,10 +54,22 @@ namespace vks{
 
     }
 
-    VkSemaphore TimelineSemaphore::GetSemaphore() {return timelineSemaphore;}
+    VkSemaphore & TimelineSemaphore::GetSemaphore() {return timelineSemaphore;}
 
-    void TimelineSemaphore::Wait() {
+    void TimelineSemaphore::Wait(uint64_t timeout) {
         VkSemaphoreWaitInfo waitInfo = {};
         waitInfo.sType = sType(waitInfo);
+        waitInfo.semaphoreCount = 1;
+        waitInfo.pSemaphores = &timelineSemaphore;
+        waitInfo.pValues = &signalCount;
+        vkWaitSemaphores(device, &waitInfo, timeout);
+    }
+
+    void TimelineSemaphore::Signal() {
+        VkSemaphoreSignalInfo signalInfo = {};
+        signalInfo.sType = sType(signalInfo);
+        signalInfo.semaphore = timelineSemaphore;
+        signalInfo.value = signalCount;
+        vkSignalSemaphore(device, &signalInfo);
     }
 }
