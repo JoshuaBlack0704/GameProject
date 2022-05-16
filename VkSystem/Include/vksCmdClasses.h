@@ -10,7 +10,7 @@ namespace vks
     class CmdBufferSet{
     public:
         CmdBufferSet(VkDevice device, VkCommandPool parentPool, std::string name);
-        vks::CmdBufferSet &AddCmdBuffers(uint32_t count, VkCommandBufferLevel level);
+
         ///Sets the functions executed by the classes command buffers
         ///This requires that the functions vector contain the same number of functions as there are command buffers
         CmdBufferSet& SetFunctions(std::vector<std::function<void(VkCommandBuffer)>> functions);
@@ -20,11 +20,13 @@ namespace vks
         void Record();
 
     private:
-        VkDevice device;
-        VkCommandPool parentPool;
-        std::vector<VkCommandBuffer> cmdBuffers;
-        std::vector<std::function<void(VkCommandBuffer)>> operations;
-        std::string name;
+        VkDevice device = nullptr;
+        VkCommandPool parentPool = nullptr;
+        std::vector<VkCommandBuffer> cmdBuffers = {};
+        std::vector<std::function<void(VkCommandBuffer)>> operations = {};
+        std::string name = {};
+        vks::CmdBufferSet &AddCmdBuffers(uint32_t count, VkCommandBufferLevel level);
+
     };
 
     class CmdPoolWrapper{
@@ -35,7 +37,7 @@ namespace vks
         void Dispose();
         CmdBufferSet& MakeSet(std::string cmdSetName);
         //When we reset the command pool, all of the the children cmdSets will be re-recorded
-        void Reset();
+        void Reset(bool Record);
         ~CmdPoolWrapper(){Dispose();};
     private:
         std::list<CmdBufferSet> cmdSets;

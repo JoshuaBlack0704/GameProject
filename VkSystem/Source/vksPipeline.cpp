@@ -36,7 +36,7 @@ vks::Pipeline::Pipeline(VkData &vkData)
             vkCreatePipelineLayout(device, &state.lcInfo, nullptr, &state.layout);
 
             gcInfo.flags = state.pipelineCreateFlags;
-            gcInfo.stageCount = state.stages.size();
+            gcInfo.stageCount = static_cast<uint32_t >(state.stages.size());
             gcInfo.pStages = state.stages.data();
             gcInfo.pVertexInputState = &state.vertexInputState;
             gcInfo.pInputAssemblyState = &state.inputAssemblyState;

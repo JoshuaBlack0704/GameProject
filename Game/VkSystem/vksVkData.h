@@ -19,7 +19,7 @@ namespace vks
         vkb::Swapchain swapchain;
         VmaAllocator allocator;
         std::function<void()> resizeCallback;
-        VkData(VkSurfaceKHR surface);
+        VkData(bool useGLFW);
         void Dispose();
 
         ~VkData(){Dispose();}

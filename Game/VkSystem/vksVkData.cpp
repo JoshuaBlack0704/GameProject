@@ -3,7 +3,7 @@
 #include <spdlog/spdlog.h>
 
 
-vks::VkData::VkData(VkSurfaceKHR surface) {
+vks::VkData::VkData(bool surfaceHandle) {
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     window = glfwCreateWindow(100, 100, "Game", nullptr, nullptr);
@@ -27,7 +27,7 @@ vks::VkData::VkData(VkSurfaceKHR surface) {
 
     instance = instRet.value();
 
-    glfwCreateWindowSurface(instance.instance, window, nullptr, &surface);
+    glfwCreateWindowSurface(instance.instance, window, nullptr, &surfaceHandle);
 
     VkPhysicalDeviceFeatures features{};
     features.samplerAnisotropy = VK_TRUE;
@@ -39,7 +39,7 @@ vks::VkData::VkData(VkSurfaceKHR surface) {
 
 
     auto pDeviceRet = vkb::PhysicalDeviceSelector(instance)
-            .set_surface(surface)
+            .set_surface(surfaceHandle)
             .add_required_extension(VK_KHR_SWAPCHAIN_EXTENSION_NAME)
             .set_required_features(features)
             .set_required_features_11(features11)

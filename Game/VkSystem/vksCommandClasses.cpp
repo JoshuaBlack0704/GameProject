@@ -12,7 +12,7 @@ vks::CmdBufferSet& vks::CmdPoolWrapper::MakeSet() {
     return cmdSets.back();
 }
 
-void vks::CmdPoolWrapper::Reset() {
+void vks::CmdPoolWrapper::Reset(bool Record) {
     vkResetCommandPool(device, cmdPool, 0);
 
     for (auto& set : cmdSets){

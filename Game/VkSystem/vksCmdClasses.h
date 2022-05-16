@@ -33,7 +33,7 @@ namespace vks
         void Dispose();
         CmdBufferSet& MakeSet();
         //When we reset the command pool, all of the the children cmdSets will be re-recorded
-        void Reset();
+        void Reset(bool Record);
         ~CmdPoolWrapper(){Dispose();};
     private:
         std::list<CmdBufferSet> cmdSets;

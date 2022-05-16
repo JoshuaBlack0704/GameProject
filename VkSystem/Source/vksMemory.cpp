@@ -1,3 +1,4 @@
+#define VMA_IMPLEMENTATION
 #include <vksMemory.h>
 #include <vksTypes.h>
 #include <spdlog/spdlog.h>
@@ -6,7 +7,7 @@
 
 namespace vks
 {
-    Memory::Memory(VmaAllocator allocator, std::string name) : allocator(allocator), name(name) {}
+    Memory::Memory(VkDevice device, VmaAllocator allocator, std::string name) : device(device), allocator(allocator), name(name) {}
 
     void Memory::Dispose() {
         if (buffer != nullptr){
@@ -30,7 +31,7 @@ namespace vks
         acInfo = acInfoRef;
 
         vmaCreateBuffer(allocator, &bcInfo, &acInfo, &buffer, &allocation, &allocationInfo);
-        spdlog::info("Created A buffer of usage {} and size {} in Memory Class \"{}\"", bcInfo.usage, allocationInfo.size, name);
+        spdlog::info("Created A buffer of usage {} and size {} in Memory Class \"{}\"", bcInfo.usage, bcInfo.size, name);
     }
 
     void Memory::SetAsImage(VkImageCreateInfo &icInfoRef, VmaAllocationCreateInfo &acInfoRef) {
@@ -58,6 +59,7 @@ namespace vks
 
     ///This happens immediately
     void Memory::TransferFromRam(const void *data, uint64_t srcOffset, uint64_t size, uint64_t dstOffset) {
+        assert(size <= bcInfo.size);
         bool wasMapped = mappedData != nullptr;
         if (!wasMapped){
             Map();
@@ -121,7 +123,7 @@ namespace vks
 
     void Memory::EnsureCapacity(VkCommandBuffer cmd, TimelineSemaphore &signal, uint64_t size) {
         assert(buffer != nullptr);
-        if (size > allocationInfo.size) { Resize(cmd, signal, size);}
+        if (size > bcInfo.size) { Resize(cmd, signal, size);}
     }
 
     void Memory::Resize(VkCommandBuffer cmd, TimelineSemaphore &signal, uint64_t size) {
@@ -134,28 +136,47 @@ namespace vks
         VkBuffer tempBuffer = nullptr;
         VmaAllocation tempAllocation = nullptr;
         VmaAllocationInfo tempAllocationInfo = {};
-        bcInfo.size = size;
-
-        vmaCreateBuffer(allocator, &bcInfo, &acInfo, &tempBuffer, &tempAllocation, &tempAllocationInfo);
         VkBufferCopy copy = {};
         copy.srcOffset = 0;
         copy.dstOffset = 0;
-        if (size > allocationInfo.size){
-            copy.size = allocationInfo.size;
+        if (size > bcInfo.size){
+            copy.size = bcInfo.size;
         }
         else{
             copy.size = size;
         }
+        spdlog::info("Resized buffer {} from used size {} to size {}", name, bcInfo.size, size);
+        bcInfo.size = size;
 
+        vmaCreateBuffer(allocator, &bcInfo, &acInfo, &tempBuffer, &tempAllocation, &tempAllocationInfo);
         vkCmdCopyBuffer(cmd, buffer, tempBuffer, 1, &copy);
 
         std::thread destoryThread([](VmaAllocator allocator, VkBuffer buffer, VmaAllocation allocation, TimelineSemaphore* cleanupSignal){
             cleanupSignal->Wait();
             vmaDestroyBuffer(allocator, buffer, allocation);
+            spdlog::info("Cleanup activated");
             }, allocator, buffer, allocation, &signal);
         destoryThread.detach();
 
+
+        buffer = tempBuffer;
+        allocation = tempAllocation;
+        allocationInfo = tempAllocationInfo;
+
         vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, {}, 1, &transferBarrier, 0, {}, 0, {});
+
+    }
+
+    uint64_t Memory::SizeInUse() {
+        assert((buffer != nullptr || image != nullptr) && !(buffer != nullptr && image != nullptr));
+        if (buffer != nullptr){
+            return bcInfo.size;
+        }
+        else{
+            VkMemoryRequirements reqs;
+            vkGetImageMemoryRequirements(device, image, &reqs);
+            return reqs.size;
+        }
 
     }
 }

@@ -8,7 +8,7 @@
 namespace vks{
     class Memory{
     public:
-        explicit Memory(VmaAllocator allocator, std::string name);
+        explicit Memory(VkDevice device, VmaAllocator allocator, std::string name);
         void Dispose();
         VkBuffer buffer = nullptr;
         VkImage image = nullptr;
@@ -24,8 +24,10 @@ namespace vks{
         void UnMap();
         void EnsureCapacity(VkCommandBuffer cmd, TimelineSemaphore &signal, uint64_t size);
         void Resize(VkCommandBuffer cmd, TimelineSemaphore &signal, uint64_t size);
+        uint64_t SizeInUse();
         ~Memory(){Dispose();}
     private:
+        VkDevice device;
         VmaAllocator allocator = nullptr;
         VkBufferCreateInfo bcInfo = {};
         VkImageCreateInfo icInfo = {};

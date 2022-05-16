@@ -1,9 +1,8 @@
-#define VMA_IMPLEMENTATION
 #include <vksVkData.h>
 #include <spdlog/spdlog.h>
 
 
-vks::VkData::VkData(VkSurfaceKHR surfaceHandle) : surface(surfaceHandle) {
+vks::VkData::VkData(bool useGLFW) {
     auto instRet = vkb::InstanceBuilder()
             .require_api_version(VK_API_VERSION_1_3)
             .set_app_name("GameProject")
@@ -38,8 +37,13 @@ vks::VkData::VkData(VkSurfaceKHR surfaceHandle) : surface(surfaceHandle) {
     pDeviceSel.set_required_features_12(features12);
     pDeviceSel.set_required_features_13(features13);
     pDeviceSel.require_present(false);
-    if (surface != VK_NULL_HANDLE){
-        spdlog::info("Requiring a Surface");
+    if (useGLFW){
+        spdlog::info("Building GLFW");
+        glfwInit();
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        window = glfwCreateWindow(100,100, "Window", nullptr, nullptr);
+        glfwCreateWindowSurface(instance.instance, window, nullptr, &surface);
+
         pDeviceSel.add_required_extension(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
         pDeviceSel.set_surface(surface);
         pDeviceSel.require_present();
@@ -60,7 +64,7 @@ vks::VkData::VkData(VkSurfaceKHR surfaceHandle) : surface(surfaceHandle) {
     }
     lDevice = lDevRet.value();
 
-    if (surface != VK_NULL_HANDLE){
+    if (useGLFW){
         auto swapRet = vkb::SwapchainBuilder(lDevice)
                 .set_old_swapchain(swapchain)
                 .build();

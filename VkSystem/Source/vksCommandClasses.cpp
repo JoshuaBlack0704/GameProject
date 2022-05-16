@@ -14,11 +14,14 @@ vks::CmdBufferSet& vks::CmdPoolWrapper::MakeSet(std::string cmdSetName) {
     return cmdSets.back();
 }
 
-void vks::CmdPoolWrapper::Reset() {
+void vks::CmdPoolWrapper::Reset(bool Record) {
     vkResetCommandPool(device, cmdPool, 0);
 
-    for (auto& set : cmdSets){
-        set.Record();
+    if  (Record){
+
+        for (auto& set : cmdSets){
+            set.Record();
+        }
     }
 
 }
@@ -39,17 +42,16 @@ vks::CmdBufferSet& vks::CmdBufferSet::AddCmdBuffers(uint32_t count, VkCommandBuf
     std::vector<VkCommandBuffer> newBuffers;
     newBuffers.resize(count);
     vkAllocateCommandBuffers(device, &aInfo, newBuffers.data());
-    cmdBuffers.insert(cmdBuffers.begin(), newBuffers.begin(), newBuffers.end());
+    cmdBuffers.insert(cmdBuffers.end(), newBuffers.begin(), newBuffers.end());
     return *this;
 }
 
 vks::CmdBufferSet& vks::CmdBufferSet::SetFunctions(std::vector<std::function<void(VkCommandBuffer)>> functions) {
-    if (functions.size() != cmdBuffers.size()){
-        spdlog::error("Command Buffer Set SetFunctions:\n   Functions size does not equal command buffer count.\n   Not all command buffers will be recorded");
-    }
-    operations.resize(functions.size());
     operations.insert(operations.begin(), functions.begin(), functions.end());
-
+    if (cmdBuffers.size() != operations.size()){
+        uint32_t difference = static_cast<uint32_t >(operations.size() - cmdBuffers.size());
+        AddCmdBuffers(difference, VK_COMMAND_BUFFER_LEVEL_PRIMARY);
+    }
     return *this;
 }
 
@@ -65,4 +67,5 @@ void vks::CmdBufferSet::Record() {
     }
 }
 
-VkCommandBuffer *vks::CmdBufferSet::pCommandBuffers() {return cmdBuffers.data();}
+VkCommandBuffer *vks::CmdBufferSet::pCommandBuffers() {
+    return cmdBuffers.data();}

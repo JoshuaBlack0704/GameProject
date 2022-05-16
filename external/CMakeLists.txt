@@ -6,8 +6,10 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/glfw/include" CACHE INTERNAL "")
 add_subdirectory(spdlog)
-set(VMA_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/VulkanMemoryAllocator/include" CACHE INTERNAL "")
 
+set(VMA_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/VulkanMemoryAllocator/include" CACHE INTERNAL "")
+add_library(vma INTERFACE)
+target_include_directories(vma INTERFACE ${VMA_INCLUDE})
 
 add_library(flecs STATIC "flecs/flecs.c" "flecs/flecs.h")
 target_include_directories(flecs INTERFACE "flecs/")

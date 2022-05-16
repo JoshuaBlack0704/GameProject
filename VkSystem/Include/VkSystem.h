@@ -4,4 +4,5 @@
 #include <vksCmdClasses.h>
 #include <vksMemory.h>
 #include <vksPipeline.h>
+#include <vksTimelineSemaphore.h>
 
