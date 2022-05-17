@@ -1,8 +1,8 @@
 #include <spdlog/spdlog.h>
 #include <VkSystem.h>
-#include <cmnBasicShapes.h>
+#include <cmnCommon.h>
 
-void simpleTrianglePipeline(vks::PipelineState& state, std::vector<vks::ShaderInfo> shaderInfos, vkb::Swapchain swapchain){
+void simpleTetrahedronPipeline(vks::PipelineState& state, std::vector<vks::ShaderInfo> shaderInfos, vkb::Swapchain swapchain){
     state.stages.clear();
     for(auto& info : shaderInfos){
         state.stages.emplace_back(info.stageInfo);
@@ -64,6 +64,7 @@ void simpleTrianglePipeline(vks::PipelineState& state, std::vector<vks::ShaderIn
     VkPipelineColorBlendAttachmentState colorBlendAttachment = {};
     colorBlendAttachment.blendEnable = VK_FALSE;
     colorBlendAttachment.colorWriteMask = VkColorComponentFlagBits::VK_COLOR_COMPONENT_R_BIT | VkColorComponentFlagBits::VK_COLOR_COMPONENT_G_BIT | VkColorComponentFlagBits::VK_COLOR_COMPONENT_B_BIT | VkColorComponentFlagBits::VK_COLOR_COMPONENT_A_BIT;
+    state.colorBlendAttachments.clear();
     state.colorBlendAttachments.emplace_back(colorBlendAttachment);
 
     state.colorBlendState = {};
@@ -82,7 +83,25 @@ void simpleTrianglePipeline(vks::PipelineState& state, std::vector<vks::ShaderIn
     state.dynamicRenderingInfo.pColorAttachmentFormats = state.dynamicRenderColorFormats.data();
 };
 
+//TODO: Descriptor Sets
+//TODO: Memory structures: Vertex Buffer, model positions, matrix data, camera uniform data, light data
+//TODO: Pipeline layouts
+//TODO: Shader creation and compilation
+//TODO: Camera Systems
+//TODO: Character Systems
+//TODO: Render Loop
+//TODO: Presentation commands
 
 int main(){
     spdlog::info("Starting TetrahedronTest");
+
+    vks::VkData vkData = vks::VkData(true);
+
+    cmn::GLFWSystem glfwSystem = cmn::GLFWSystem(vkData.window, vkData.surface);
+
+    while (!glfwWindowShouldClose(vkData.window)){
+        glfwPollEvents();
+    }
+
+
 }
