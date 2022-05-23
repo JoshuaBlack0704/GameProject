@@ -179,4 +179,41 @@ namespace vks
         }
 
     }
+
+    void Memory::AttachBufferBinding(DescriptorSet &targetSet, uint64_t offset, uint64_t range) {
+        assert(buffer != nullptr && offset <= bcInfo.size);
+
+        if (range == 0){
+            range = bcInfo.size - offset;
+        }
+        VkDescriptorBufferInfo bInfo = {};
+        bInfo.buffer = buffer;
+        bInfo.offset = 0;
+        bInfo.range = range;
+        VkDescriptorType type;
+
+        if  (bcInfo.usage == VK_BUFFER_USAGE_STORAGE_BUFFER_BIT){
+            type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+        } else{
+            assert(false);
+        }
+
+        DescriptorBinding binding(type, 1, VK_SHADER_STAGE_VERTEX_BIT, true, false, false, bInfo, {},
+                                  {});
+
+        targetSet.AddBinding(binding);
+    }
+
+    void Memory::AttachImageBinding(DescriptorSet &targetSet, VkImageView view, VkImageLayout layout, VkSampler sampler) {
+        assert(image != nullptr);
+        VkDescriptorType type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        VkDescriptorImageInfo iInfo = {};
+        iInfo.imageView = view;
+        iInfo.imageLayout = layout;
+        iInfo.sampler = sampler;
+        DescriptorBinding binding(type, 1, VK_SHADER_STAGE_VERTEX_BIT, true, false, false, {}, iInfo,
+                {});
+
+        targetSet.AddBinding(binding);
+    }
 }

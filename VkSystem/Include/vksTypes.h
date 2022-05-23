@@ -29,4 +29,13 @@ namespace vks
     VkStructureType sType(VkTimelineSemaphoreSubmitInfo&);
     VkStructureType sType(VkSemaphoreWaitInfo&);
     VkStructureType sType(VkSemaphoreSignalInfo&);
+    VkStructureType sType(VkDescriptorPoolCreateInfo&);
+    VkStructureType sType(VkDescriptorSetAllocateInfo&);
+    VkStructureType sType(VkDescriptorSetLayoutCreateInfo&);
+    VkStructureType sType(VkWriteDescriptorSet&);
+
+
+
+
+
 }

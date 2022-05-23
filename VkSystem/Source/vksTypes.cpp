@@ -28,5 +28,8 @@ namespace vks
     VkStructureType sType(VkTimelineSemaphoreSubmitInfo&){return VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO;}
     VkStructureType sType(VkSemaphoreWaitInfo&){return VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO;}
     VkStructureType sType(VkSemaphoreSignalInfo&){return VK_STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO;}
-
+    VkStructureType sType(VkDescriptorPoolCreateInfo&){return VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;}
+    VkStructureType sType(VkDescriptorSetAllocateInfo&) { return VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO; }
+    VkStructureType sType(VkDescriptorSetLayoutCreateInfo&) { return VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;}
+    VkStructureType sType(VkWriteDescriptorSet&) { return VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET; }
 }

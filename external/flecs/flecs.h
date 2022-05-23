@@ -2357,7 +2357,7 @@ struct ecs_trigger_t {
     ecs_iter_action_t callback; /* Callback */
 
     void *ctx;                  /* Callback context */
-    void *binding_ctx;          /* Binding context (for language bindings) */
+    void *binding_ctx;          /* DescriptorBinding context (for language bindings) */
 
     ecs_ctx_free_t ctx_free;    /* Callback to free ctx */
     ecs_ctx_free_t binding_ctx_free; /* Callback to free binding_ctx */
@@ -2390,7 +2390,7 @@ struct ecs_observer_t {
     ecs_run_action_t run;       /* See ecs_observer_desc_t::run */
 
     void *ctx;                  /* Callback context */
-    void *binding_ctx;          /* Binding context (for language bindings) */
+    void *binding_ctx;          /* DescriptorBinding context (for language bindings) */
 
     ecs_ctx_free_t ctx_free;    /* Callback to free ctx */
     ecs_ctx_free_t binding_ctx_free; /* Callback to free binding_ctx */
@@ -2702,7 +2702,7 @@ struct ecs_iter_t {
     /* Context */
     void *param;                  /* Param passed to ecs_run */
     void *ctx;                    /* System context */
-    void *binding_ctx;            /* Binding context */
+    void *binding_ctx;            /* DescriptorBinding context */
 
     /* Time */
     FLECS_FLOAT delta_time;       /* Time elapsed since last frame */
@@ -9175,7 +9175,7 @@ typedef struct ecs_system_desc_t {
     /* Context to be passed to system status callback */
     void *status_ctx;
 
-    /* Binding context, for when system is implemented in other language */
+    /* DescriptorBinding context, for when system is implemented in other language */
     void *binding_ctx;
 
     /* Functions that are invoked during system cleanup to free context data.

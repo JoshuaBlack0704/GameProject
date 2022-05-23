@@ -3,7 +3,7 @@
 #include <vk_mem_alloc.h>
 #include <string>
 #include <vksTimelineSemaphore.h>
-
+#include <vksDescriptors.h>
 
 namespace vks{
     class Memory{
@@ -24,6 +24,8 @@ namespace vks{
         void UnMap();
         void EnsureCapacity(VkCommandBuffer cmd, TimelineSemaphore &signal, uint64_t size);
         void Resize(VkCommandBuffer cmd, TimelineSemaphore &signal, uint64_t size);
+        void AttachBufferBinding(DescriptorSet& targetSet, uint64_t offset = 0, uint64_t range = 0);
+        void AttachImageBinding(DescriptorSet& targetSet, VkImageView view, VkImageLayout layout, VkSampler sampler);
         uint64_t SizeInUse();
         ~Memory(){Dispose();}
     private:
