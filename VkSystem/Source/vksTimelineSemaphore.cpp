@@ -32,7 +32,7 @@ namespace vks{
 
     void TimelineSemaphore::IncrementSignalCount() {signalCount++;}
 
-    VkTimelineSemaphoreSubmitInfo TimelineSemaphore::GetSubmitInfo(bool incrementSignalCount, std::vector<TimelineSemaphore *> waitTimelineSemaphores) {
+    VkTimelineSemaphoreSubmitInfo TimelineSemaphore::GetSubmitInfo(bool incrementSignalCount, std::vector<TimelineSemaphore *> waitTimelineSemaphores, std::vector<Semaphore> waitNormalSemaphores) {
         if (incrementSignalCount) {IncrementSignalCount();}
 
         waitValues.clear();
@@ -41,6 +41,10 @@ namespace vks{
         for (auto ts : waitTimelineSemaphores){
             waitValues.emplace_back(ts->GetSignalCount());
             waitSemaphores.emplace_back(ts->GetSemaphore());
+        }
+        for(auto s : waitNormalSemaphores){
+            waitValues.emplace_back(0);
+            waitSemaphores.emplace_back(s);
         }
 
         VkTimelineSemaphoreSubmitInfo tsInfo = {};
@@ -71,5 +75,15 @@ namespace vks{
         signalInfo.semaphore = timelineSemaphore;
         signalInfo.value = signalCount;
         vkSignalSemaphore(device, &signalInfo);
+    }
+
+    Semaphore::Semaphore(VkDevice device) : device(device) {
+        VkSemaphoreCreateInfo cInfo = {};
+        cInfo.sType = sType(cInfo);
+        vkCreateSemaphore(device, &cInfo, nullptr, &semaphore);
+    }
+
+    void Semaphore::Dispose() {
+        vkDestroySemaphore(device, semaphore, nullptr);
     }
 }

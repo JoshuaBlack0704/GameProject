@@ -37,10 +37,14 @@ namespace vks{
         spdlog::info("Destroyed Descriptor Pool");
     }
 
-    void DescriptorPool::AllocateSet(VkDescriptorSetAllocateInfo aInfo, std::vector<VkDescriptorSet> &sets) {
+    void DescriptorPool::AllocateSet(VkDescriptorSetAllocateInfo aInfo, VkDescriptorSet &set) {
         aInfo.sType = sType(aInfo);
         aInfo.descriptorPool = descriptorPool;
-        vkAllocateDescriptorSets(device, &aInfo, sets.data());
+        VkResult res = vkAllocateDescriptorSets(device, &aInfo, &set);
+
+
+
+        spdlog::info(res);
     }
 
     DescriptorSetLayout::DescriptorSetLayout(VkDevice device, VkDescriptorSetLayout layout) : device(device), layout(layout) {}
@@ -92,19 +96,17 @@ namespace vks{
         return layout->layout;
     }
 
-    void DescriptorSet::Allocate(DescriptorPool pool) {
+    void DescriptorSet::Allocate(DescriptorPool &pool) {
         std::vector<VkDescriptorSet> sets;
         sets.resize(1);
 
         VkDescriptorSetAllocateInfo aInfo = {};
         aInfo.sType = sType(aInfo);
         aInfo.descriptorSetCount = 1;
-        auto layout  = GetLayout();
-        aInfo.pSetLayouts = &layout;
+        auto templayout  = GetLayout();
+        aInfo.pSetLayouts = &templayout;
 
-        pool.AllocateSet(aInfo, sets);
-
-        set = sets[0];
+        pool.AllocateSet(aInfo, set);
     }
 
     void DescriptorSet::Write() {
@@ -116,7 +118,6 @@ namespace vks{
             write.sType = sType(write);
             write.dstSet = set;
             write.dstBinding = binding.binding.binding;
-            write.dstArrayElement = 0;
             write.descriptorCount = binding.binding.descriptorCount;
             write.descriptorType = binding.binding.descriptorType;
             if (binding.buffer){

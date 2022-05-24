@@ -67,6 +67,7 @@ vks::VkData::VkData(bool useGLFW) {
     if (useGLFW){
         auto swapRet = vkb::SwapchainBuilder(lDevice)
                 .set_old_swapchain(swapchain)
+                .set_image_usage_flags(VK_IMAGE_USAGE_TRANSFER_DST_BIT)
                 .build();
         if (!swapRet){
             spdlog::error("Could not create swapchain");

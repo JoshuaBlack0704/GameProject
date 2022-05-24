@@ -4,13 +4,14 @@
 #define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
 #include <vulkan/vulkan.h>
+#include <VkSystem.h>
 #include "GLFW/glfw3.h"
 
 namespace cmn{
 
     class GLFWSystem{
     public:
-        GLFWSystem(GLFWwindow *window, VkSurfaceKHR surface);
+        GLFWSystem(vks::VkData &vkData);
         void AddResizeCallback(std::function<void(GLFWwindow* window, int width, int height)> callback);
         void ExecuteResizeCallbacks(GLFWwindow *window, int width, int height);
         void AddKeyCallback(std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> callback);

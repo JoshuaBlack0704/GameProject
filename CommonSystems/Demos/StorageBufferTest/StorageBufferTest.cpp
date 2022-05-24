@@ -48,7 +48,7 @@ int main(){
         auto& sendSet = cmdPool.MakeSet("Main Command Set");
         sendSet.SetFunctions({[&stageBuffer, &gpuStorage, &receiveBuffer, &signal, &message, &newMessage](VkCommandBuffer cmd){
 
-            stageBuffer.TransferFromRam(message.data(), 0, message.size(), 0);
+            stageBuffer.TransferFromRam(message.data(), 0, 0, message.size());
 
             VkCommandBufferBeginInfo beginInfo = {};
             beginInfo.sType = vks::sType(beginInfo);

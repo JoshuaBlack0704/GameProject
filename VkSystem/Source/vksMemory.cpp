@@ -58,7 +58,7 @@ namespace vks
     }
 
     ///This happens immediately
-    void Memory::TransferFromRam(const void *data, uint64_t srcOffset, uint64_t size, uint64_t dstOffset) {
+    void Memory::TransferFromRam(const void *data, uint64_t srcOffset, uint64_t dstOffset, uint64_t size) {
         assert(size <= bcInfo.size);
         bool wasMapped = mappedData != nullptr;
         if (!wasMapped){
@@ -215,5 +215,10 @@ namespace vks
                 {});
 
         targetSet.AddBinding(binding);
+    }
+
+    void Memory::TransferBufferToImage(VkCommandBuffer cmd, Memory &dst, VkImageLayout currentLayout, std::vector<VkBufferImageCopy> regions) {
+        assert(dst.image != nullptr);
+        vkCmdCopyBufferToImage(cmd, buffer, dst.image, currentLayout, regions.size(), regions.data());
     }
 }

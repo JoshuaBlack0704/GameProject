@@ -15,9 +15,10 @@ namespace vks{
         VmaAllocationInfo allocationInfo = {};
         void* mappedData = nullptr;
         void SetAsBuffer(VkBufferCreateInfo& bcInfoRef, VmaAllocationCreateInfo& acInfoRef);
-        void TransferFromRam(const void *data, uint64_t srcOffset, uint64_t size, uint64_t dstOffset);
+        void TransferFromRam(const void *data, uint64_t srcOffset, uint64_t dstOffset, uint64_t size);
         void TransferToBuffer(VkCommandBuffer cmd, Memory &dst, uint64_t srcOffset, uint64_t dstOffset, uint64_t size, bool barrier);
         void TransferFromBuffer(VkCommandBuffer cmd, Memory &src, uint64_t srcOffset, uint64_t dstOffset, uint64_t size, bool barrier);
+        void TransferBufferToImage(VkCommandBuffer cmd, Memory &dst, VkImageLayout currentLayout, std::vector<VkBufferImageCopy> regions);
         void SetAsImage(VkImageCreateInfo& icInfoRef, VmaAllocationCreateInfo& acInfoRef);
         void FlushAndInvalidate();
         void Map();

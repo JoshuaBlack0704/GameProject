@@ -27,7 +27,7 @@ namespace vks{
     public:
         explicit DescriptorPool(VkDevice device);
 
-        void AllocateSet(VkDescriptorSetAllocateInfo aInfo, std::vector<VkDescriptorSet> &sets);
+        void AllocateSet(VkDescriptorSetAllocateInfo aInfo, VkDescriptorSet &set);
 
 
         void Dispose();
@@ -43,7 +43,7 @@ namespace vks{
         explicit DescriptorSet(VkDevice device, std::shared_ptr<DescriptorSetLayout> copyLayout = nullptr);
         void AddBinding(DescriptorBinding binding);
         VkDescriptorSetLayout GetLayout();
-        void Allocate(DescriptorPool pool);
+        void Allocate(DescriptorPool &pool);
         void Write();
 
     private:

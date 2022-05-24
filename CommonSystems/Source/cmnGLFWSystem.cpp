@@ -2,7 +2,7 @@
 #include <spdlog/spdlog.h>
 
 namespace cmn{
-    GLFWSystem::GLFWSystem(GLFWwindow *window, VkSurfaceKHR surface) : window(window), surface(surface) {
+    GLFWSystem::GLFWSystem(vks::VkData &vkData) : window(vkData.window), surface(vkData.surface) {
         glfwSetWindowUserPointer(window, this);
         glfwSetWindowSizeCallback(window, [](GLFWwindow *window, int width, int height){
             spdlog::info("Window resized to {} x {}", width, height);
@@ -23,9 +23,26 @@ namespace cmn{
             GLFWSystem* glfwSystem = reinterpret_cast<GLFWSystem*>(glfwGetWindowUserPointer(window));
             glfwSystem->ExecuteMouseButtonCallbacks(window, button, action, mods);
         });
+
+
+        AddResizeCallback([&vkData](GLFWwindow * window, int width, int height){
+            spdlog::info("Rebuilding Swapchain");
+
+            auto swapRet = vkb::SwapchainBuilder(vkData.lDevice)
+                    .set_old_swapchain(vkData.swapchain.swapchain)
+                    .set_image_usage_flags(VK_IMAGE_USAGE_TRANSFER_DST_BIT)
+                    .build();
+
+            vkData.swapchain = swapRet.value();
+
+            if (!swapRet){
+                spdlog::error("Could not create swapchain");
+                abort();
+            }
+        });
     }
 
-    void GLFWSystem::AddResizeCallback(std::function<void(GLFWwindow *, int, int)> callback) {
+    void GLFWSystem::AddResizeCallback(std::function<void(GLFWwindow * window, int width, int height)> callback) {
         resizeCallbacks.emplace_back(callback);
     }
 
