@@ -6,4 +6,5 @@
 #include <vksPipeline.h>
 #include <vksTimelineSemaphore.h>
 #include <vksDescriptors.h>
+#include <vksFence.h>
 

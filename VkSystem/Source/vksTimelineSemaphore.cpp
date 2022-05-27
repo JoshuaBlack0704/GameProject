@@ -44,7 +44,7 @@ namespace vks{
         }
         for(auto s : waitNormalSemaphores){
             waitValues.emplace_back(0);
-            waitSemaphores.emplace_back(s);
+            waitSemaphores.emplace_back(s.semaphore);
         }
 
         VkTimelineSemaphoreSubmitInfo tsInfo = {};

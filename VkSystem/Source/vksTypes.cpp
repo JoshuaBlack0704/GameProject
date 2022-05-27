@@ -32,4 +32,10 @@ namespace vks
     VkStructureType sType(VkDescriptorSetAllocateInfo&) { return VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO; }
     VkStructureType sType(VkDescriptorSetLayoutCreateInfo&) { return VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;}
     VkStructureType sType(VkWriteDescriptorSet&) { return VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET; }
+    VkStructureType sType(VkPresentInfoKHR&){return VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;}
+    VkStructureType sType(VkImageMemoryBarrier&){return VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;}
+    VkStructureType sType(VkFenceCreateInfo&){return VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;}
+
+
+
 }

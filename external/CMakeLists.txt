@@ -25,3 +25,7 @@ file(GLOB vkbINCL "vk-bootstrap/src/*.h")
 add_library(VkBootstrap ${vkbSRC} ${vkbINCL})
 target_link_libraries(VkBootstrap PUBLIC Vulkan::Vulkan)
 target_include_directories(VkBootstrap PUBLIC "vk-bootstrap/src/")
+
+file(GLOB_RECURSE taskflowINCL "taskflow/taskflow/*.hpp")
+add_library(taskflow INTERFACE ${taskflowINCL})
+target_include_directories(taskflow INTERFACE "taskflow/taskflow/")

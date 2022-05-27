@@ -33,9 +33,7 @@ namespace vks
     VkStructureType sType(VkDescriptorSetAllocateInfo&);
     VkStructureType sType(VkDescriptorSetLayoutCreateInfo&);
     VkStructureType sType(VkWriteDescriptorSet&);
-
-
-
-
-
+    VkStructureType sType(VkPresentInfoKHR&);
+    VkStructureType sType(VkImageMemoryBarrier&);
+    VkStructureType sType(VkFenceCreateInfo&);
 }

@@ -16,3 +16,6 @@
 [submodule "external/vk-bootstrap"]
 	path = external/vk-bootstrap
 	url = https://github.com/charles-lunarg/vk-bootstrap.git
+[submodule "external/taskflow"]
+	path = external/taskflow
+	url = https://github.com/taskflow/taskflow.git
