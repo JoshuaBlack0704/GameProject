@@ -5,6 +5,7 @@
 #include <functional>
 #include <glm/glm.hpp>
 #include <taskflow.hpp>
+#include <bitset>
 
 struct Light{
     glm::vec3 pos;
@@ -15,9 +16,13 @@ struct Sphere{
     float radius;
     Sphere(glm::vec3 pos, float radius) : pos(pos), radius(radius){}
 };
+typedef union pixel_s {
+    uint32_t uint32_value;
+    uint8_t uint8_value[4];
+} pixel_t;
 
 
-bool IntersectSpheres(glm::vec3 origin, glm::vec3 ray, glm::vec3& intersection,  std::vector<Sphere> const &spheres, float maxDistance){
+bool IntersectSpheres(glm::vec3 origin, glm::vec3 ray, glm::vec3& intersection, glm::vec3& normal, std::vector<Sphere> const &spheres, float maxDistance){
     float minDistToIntersect = maxDistance;
     for (auto& sphere : spheres){
         float projectedDistance = glm::dot(sphere.pos - origin, ray);
@@ -29,6 +34,7 @@ bool IntersectSpheres(glm::vec3 origin, glm::vec3 ray, glm::vec3& intersection, 
             if(distanceToIntersect < minDistToIntersect){
                 minDistToIntersect = distanceToIntersect;
                 intersection = origin + distanceToIntersect * ray;
+                normal = sphere.pos - intersection;
             }
         }
     }
@@ -37,7 +43,7 @@ bool IntersectSpheres(glm::vec3 origin, glm::vec3 ray, glm::vec3& intersection, 
 }
 
 struct RayTracer{
-    RayTracer(std::vector<uint32_t>& data) : data(data){
+    RayTracer(std::vector<uint32_t>& data) : data(data), exe(1){
         traceRays = [this](GLFWwindow* window, int key, int scancode, int action, int mods){
             for(auto& sphere : spheres){
                 if (sphere.radius != 80 && sphere.radius != .5f)
@@ -49,33 +55,47 @@ struct RayTracer{
                 spdlog::info("TracingRays");
                 if(width != pastExtent.width && height != pastExtent.height){
                     pastExtent.width = width; pastExtent.height = height;
-
+                    float aspectRatio = static_cast<float>(pastExtent.width) / static_cast<float>(pastExtent.height);
+                    aspectMat = {1*aspectRatio, 0, 0,
+                                 0, 1, 0,
+                                 0 ,0 ,0};
+                    projectionMat = {2.0f/pastExtent.width, 0, 0,
+                                     0, -2.0f/pastExtent.height, 0,
+                                     0, 0, 0};
                     flow.clear();
                     for (int y = 0; y < height; ++y) {
                         for (int x = 0; x < width; ++x) {
 
-                            flow.emplace([&extent = this->pastExtent, x, y, &pixel = this->data[x + y * width], this](){
-                                float aspectRatio = static_cast<float>(extent.width) / static_cast<float>(extent.height);
-                                glm::mat2 aspectMat{1*aspectRatio, 0,
-                                                    0, 1};
-                                float xratio = (static_cast<float>(x)/(extent.width)); float yratio = (static_cast<float>(y)/(extent.height));
-                                float xpos = -1 + 2*xratio; float ypos = 1 - 2*yratio; float zpos = 0;
-                                glm::vec2 res = aspectMat * glm::vec2 {xpos, ypos};
+                            flow.emplace([x, y, &projMat = this->projectionMat, &aspectMat = this->aspectMat, &pixel = this->data[x + y * width], this](){
+                                glm::vec3 nearPlanePoint = {-1, 1, 0};
+                                nearPlanePoint = (nearPlanePoint + projMat * glm::vec3{x, y, 0});
+                                nearPlanePoint = aspectMat * nearPlanePoint;
 
                                 //We are in world space here
-                                glm::vec3 nearPlanePoint(res.x, res.y, zpos);
-                                glm::vec3 eyePoint(0, 0, -.5);
-                                glm::vec3 ray = glm::normalize((nearPlanePoint - eyePoint));
+                                glm::vec3 eyePoint(0, 0, -1);
+                                glm::vec3 ray = glm::normalize(nearPlanePoint - eyePoint);
                                 glm::vec3 intersection;
+                                glm::vec3 normal;
                                 int index = x + y;
                                 pixel = 0x5f5fad;
-                                if(IntersectSpheres(eyePoint, ray, intersection, this->spheres, std::numeric_limits<float>::max())){
+                                if(IntersectSpheres(eyePoint, ray, intersection, normal, this->spheres, std::numeric_limits<float>::max())){
+
                                     //spdlog::info("Hit Sphere");
                                     for(auto& light : this->lights){
                                         ray = glm::normalize(light.pos - intersection);
-                                        if (!IntersectSpheres(intersection, ray, intersection, this->spheres, glm::length(light.pos - intersection))){
+                                        if (!IntersectSpheres(intersection, ray, intersection, normal, this->spheres, glm::length(light.pos - intersection))){
                                             //spdlog::info("Hit Light");
-                                            pixel = 0xffffff;
+                                            glm::ivec3 color = {1, 1, 1};
+                                            //color *= (255.0f*std::clamp(glm::dot(ray, normal), 0.0f, 1.0f));
+                                            pixel_t pixelVal;
+                                            pixelVal.uint8_value[0] = color.x;
+                                            pixelVal.uint8_value[1] = color.y;
+                                            pixelVal.uint8_value[2] = color.z;
+
+
+                                            uint32_t value = 0xffffff;
+
+                                            pixel = pixelVal.uint32_value;
                                         }
                                         else{
                                             pixel = 0;
@@ -88,7 +108,6 @@ struct RayTracer{
                         }
                     }
                 }
-                tf::Executor exe;
                 exe.run(this->flow);
             }
         };
@@ -107,6 +126,9 @@ struct RayTracer{
     std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> traceRays;
     std::vector<Sphere> spheres;
     std::vector<Light> lights;
+    tf::Executor exe;
+    glm::mat3 projectionMat;
+    glm::mat3 aspectMat;
 
 
 };
