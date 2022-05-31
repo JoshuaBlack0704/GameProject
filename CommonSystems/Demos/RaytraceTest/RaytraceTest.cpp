@@ -9,41 +9,82 @@
 
 struct Light{
     glm::vec3 pos;
-    Light(glm::vec3 pos) : pos(pos){}
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    float falloff = 1;
+    Light(glm::vec3 pos, float falloff = 1, uint8_t red = 255, uint8_t green = 255, uint8_t blue = 255) : pos(pos), falloff(falloff), red(red), green(green), blue(blue){}
 };
 struct Sphere{
     glm::vec3 pos;
     float radius;
     Sphere(glm::vec3 pos, float radius) : pos(pos), radius(radius){}
 };
-typedef union pixel_s {
-    uint32_t uint32_value;
-    uint8_t uint8_value[4];
-} pixel_t;
+struct RayCast{
+    glm::vec3 origin;
+    glm::vec3 ray;
+    glm::vec3 intersectPos;
+    glm::vec3 normal;
+    float distance = std::numeric_limits<float>::max();
+    const Sphere* pSphere;
+};
 
 
-bool IntersectSpheres(glm::vec3 origin, glm::vec3 ray, glm::vec3& intersection, glm::vec3& normal, std::vector<Sphere> const &spheres, float maxDistance){
-    float minDistToIntersect = maxDistance;
+bool IntersectSpheres(RayCast& data, std::vector<Sphere> const &spheres){
+    bool foundIntersect = false;
     for (auto& sphere : spheres){
-        float projectedDistance = glm::dot(sphere.pos - origin, ray);
-        glm::vec3 projectedPoint = origin + projectedDistance * ray;
+        float projectedDistance = glm::dot(sphere.pos - data.origin, data.ray);
+        glm::vec3 projectedPoint = data.origin + projectedDistance * data.ray;
         float centerDist = glm::length(sphere.pos - projectedPoint);
+
+
         if  (projectedDistance > 0 && centerDist < sphere.radius){
             float x = sqrt(pow(sphere.radius, 2) - pow(centerDist, 2));
             float distanceToIntersect = projectedDistance - x;
-            if(distanceToIntersect < minDistToIntersect){
-                minDistToIntersect = distanceToIntersect;
-                intersection = origin + distanceToIntersect * ray;
-                normal = sphere.pos - intersection;
+            if(distanceToIntersect < data.distance){
+                data.distance = distanceToIntersect;
+                data.intersectPos = data.origin + distanceToIntersect * data.ray;
+                data.normal = glm::normalize(data.intersectPos - sphere.pos);
+                data.pSphere = &sphere;
+                foundIntersect = true;
             }
         }
     }
 
-    return minDistToIntersect != maxDistance;
+    return foundIntersect;
+}
+
+uint32_t SampleLights(RayCast& data, std::vector<Sphere> const &spheres, std::vector<Light> lights){
+    uint32_t pixelVal = 0;
+    uint8_t byte0 = 0, byte1 = 0, byte2 = 0, byte3 = 0;
+
+
+
+    for (auto& light : lights){
+        RayCast toLight;
+        toLight.origin = data.intersectPos;
+        toLight.ray = glm::normalize(light.pos - toLight.origin);
+        toLight.distance = glm::length(light.pos - toLight.origin);
+        float factor = glm::dot(toLight.ray, data.normal);
+        if (factor > 0 && !IntersectSpheres(toLight, spheres)){
+            byte0 += light.blue*factor*light.falloff; byte1 += light.green*factor*light.falloff; byte2 += light.red*factor*light.falloff; byte3 = 1;
+        }
+        if (factor == 1 || byte0 == 255){
+            spdlog::info("Here");
+        }
+    }
+
+
+    pixelVal = (pixelVal & 0xFFFFFF00) |  byte0;
+    pixelVal = (pixelVal & 0xFFFF00FF) | ((uint32_t)byte1 <<  8);
+    pixelVal = (pixelVal & 0xFF00FFFF) | ((uint32_t)byte2 << 16);
+    pixelVal = (pixelVal & 0x00FFFFFF) | ((uint32_t)byte3 << 24);
+
+    return pixelVal;
 }
 
 struct RayTracer{
-    RayTracer(std::vector<uint32_t>& data) : data(data), exe(1){
+    RayTracer(std::vector<uint32_t>& data) : data(data){
         traceRays = [this](GLFWwindow* window, int key, int scancode, int action, int mods){
             for(auto& sphere : spheres){
                 if (sphere.radius != 80 && sphere.radius != .5f)
@@ -63,47 +104,27 @@ struct RayTracer{
                                      0, -2.0f/pastExtent.height, 0,
                                      0, 0, 0};
                     flow.clear();
+
+
+
+
+
                     for (int y = 0; y < height; ++y) {
                         for (int x = 0; x < width; ++x) {
 
                             flow.emplace([x, y, &projMat = this->projectionMat, &aspectMat = this->aspectMat, &pixel = this->data[x + y * width], this](){
+                                pixel = 0x5f5fad;
                                 glm::vec3 nearPlanePoint = {-1, 1, 0};
                                 nearPlanePoint = (nearPlanePoint + projMat * glm::vec3{x, y, 0});
                                 nearPlanePoint = aspectMat * nearPlanePoint;
 
-                                //We are in world space here
-                                glm::vec3 eyePoint(0, 0, -1);
-                                glm::vec3 ray = glm::normalize(nearPlanePoint - eyePoint);
-                                glm::vec3 intersection;
-                                glm::vec3 normal;
-                                int index = x + y;
-                                pixel = 0x5f5fad;
-                                if(IntersectSpheres(eyePoint, ray, intersection, normal, this->spheres, std::numeric_limits<float>::max())){
+                                RayCast cameraRay;
+                                cameraRay.origin = {0, 0, -1};
+                                cameraRay.ray = glm::normalize(nearPlanePoint - cameraRay.origin);
 
-                                    //spdlog::info("Hit Sphere");
-                                    for(auto& light : this->lights){
-                                        ray = glm::normalize(light.pos - intersection);
-                                        if (!IntersectSpheres(intersection, ray, intersection, normal, this->spheres, glm::length(light.pos - intersection))){
-                                            //spdlog::info("Hit Light");
-                                            glm::ivec3 color = {1, 1, 1};
-                                            //color *= (255.0f*std::clamp(glm::dot(ray, normal), 0.0f, 1.0f));
-                                            pixel_t pixelVal;
-                                            pixelVal.uint8_value[0] = color.x;
-                                            pixelVal.uint8_value[1] = color.y;
-                                            pixelVal.uint8_value[2] = color.z;
-
-
-                                            uint32_t value = 0xffffff;
-
-                                            pixel = pixelVal.uint32_value;
-                                        }
-                                        else{
-                                            pixel = 0;
-                                        }
-                                    }
+                                if(IntersectSpheres(cameraRay, this->spheres)){
+                                    pixel = SampleLights(cameraRay, this->spheres, this->lights);
                                 }
-
-
                             });
                         }
                     }
@@ -116,8 +137,8 @@ struct RayTracer{
     void AddSphere(glm::vec3 pos, float radius){
      spheres.emplace_back(Sphere{pos, radius});
     }
-    void AddLight(glm::vec3 pos){
-        lights.emplace_back(Light{pos});
+    void AddLight(Light light){
+        lights.emplace_back(light);
     }
 
     std::vector<uint32_t>& data;
@@ -157,14 +178,14 @@ int main(){
         glfwSystem.AddResizeCallback(memoryCreate);
         RayTracer tracer(data);
         glfwSystem.AddKeyCallback(tracer.traceRays);
+        tracer.AddSphere({-5,-5,20}, 1);
+        tracer.AddSphere({5,-5,20}, 1);
+        tracer.AddSphere({0,-5,20}, 1);
         tracer.AddSphere({0,0,20}, 1);
-        tracer.AddSphere({0,-10,10}, 3);
+        tracer.AddSphere({0,-90,20}, 80);
+        tracer.AddLight(Light(glm::vec3{0,-3.5,10}, 1, 255, 0, 0));
+        tracer.AddLight(Light(glm::vec3{0,-6.5,20}, 1, 0, 0, 255));
 
-        tracer.AddSphere({-5,0,20}, 1);
-        tracer.AddSphere({5,0,20}, 1);
-        tracer.AddSphere({0,-90,10}, 80);
-        tracer.AddLight({0,10,20});
-        tracer.AddSphere({0,12,20}, .5);
 
         VkCommandPoolCreateInfo cInfo = {};
         cInfo.queueFamilyIndex = vkData.lDevice.get_queue_index(vkb::QueueType::transfer).value();
