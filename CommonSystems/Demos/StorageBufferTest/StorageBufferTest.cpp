@@ -74,7 +74,7 @@ int main(){
             messageStream << "Hello from GPU number: " << std::to_string(i);
             newMessage = messageStream.str();
 
-            auto timelineInfo = signal.GetSubmitInfo(true, {});
+            auto timelineInfo = signal.GetSubmitInfo(true, {}, {});
             VkSubmitInfo submit = {};
             submit.sType = vks::sType(submit);
             submit.pNext = &timelineInfo;

@@ -113,7 +113,9 @@ struct RayTracer{
                         for (int x = 0; x < width; ++x) {
 
                             flow.emplace([x, y, &projMat = this->projectionMat, &aspectMat = this->aspectMat, &pixel = this->data[x + y * width], this](){
-                                pixel = 0x5f5fad;
+                                //pixel = 0x00261c;
+                                pixel = 0xa18873;
+
                                 glm::vec3 nearPlanePoint = {-1, 1, 0};
                                 nearPlanePoint = (nearPlanePoint + projMat * glm::vec3{x, y, 0});
                                 nearPlanePoint = aspectMat * nearPlanePoint;
@@ -183,8 +185,8 @@ int main(){
         tracer.AddSphere({0,-5,20}, 1);
         tracer.AddSphere({0,0,20}, 1);
         tracer.AddSphere({0,-90,20}, 80);
-        tracer.AddLight(Light(glm::vec3{0,-3.5,10}, 1, 255, 0, 0));
-        tracer.AddLight(Light(glm::vec3{0,-6.5,20}, 1, 0, 0, 255));
+        tracer.AddLight(Light(glm::vec3{0,10,20}, 1, 255, 0, 0));
+        tracer.AddLight(Light(glm::vec3{-10,0,20}, 1, 0, 0, 255));
 
 
         VkCommandPoolCreateInfo cInfo = {};

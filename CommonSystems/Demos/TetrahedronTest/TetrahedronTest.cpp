@@ -97,7 +97,7 @@ int main(){
 
     vks::VkData vkData = vks::VkData(true);
 
-    cmn::GLFWSystem glfwSystem = cmn::GLFWSystem(vkData.window, vkData.surface);
+    cmn::GLFWSystem glfwSystem = cmn::GLFWSystem(vkData);
 
     while (!glfwWindowShouldClose(vkData.window)){
         glfwPollEvents();

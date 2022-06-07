@@ -6,7 +6,7 @@ int main(){
     spdlog::info("Starting GLFW System Test");
     vks::VkData vkData = vks::VkData(true);
 
-    cmn::GLFWSystem glfwSystem = cmn::GLFWSystem(vkData.window, vkData.surface);
+    cmn::GLFWSystem glfwSystem = cmn::GLFWSystem(vkData);
     glfwSystem.AddKeyCallback([](GLFWwindow*,int key,int,int action,int){
         if (key == GLFW_KEY_0){
             if (action == GLFW_PRESS){
